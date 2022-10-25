@@ -1,18 +1,18 @@
 <p align="center">
   <a href="https://decent.land">
-    <img src="./img/logo25.png" height="124">
+    <img src="./img/new-logo.png" height="200">
   </a>
   <h3 align="center"><code>@decentdotland/ark-protocol</code></h3>
   <p align="center">multi-chain identities linking protocol</p>
 </p>
 
 ## Synopsis
-Ark Network is a protocol for verified multi-chain addresses (identities) linking. The protocol consists of an oracle address on Arweave network and other data registry contracts on EVM (and possibly non-EVM chains) with a validation backend.
+Ark Protocol is a protocol designed for verified multichain addresses (identities) linking. The protocol consists of an oracle contract on [Arweave](https://arweave.org) network ([EXM Protocol](https://exm.dev)) and other data registry contracts deployed on several EVM (and non-EVM chains).
 
-## Install & run it
+## Install & Run it
 
 ```sh
-git clone https://github.com/decentldotland/ark-network.git
+git clone https://github.com/decentldotland/ark-protocol.git
 
 cd ark-network
 
@@ -23,7 +23,7 @@ npm run polling
 
 ## Build Ark EVM Contract
 
-The repository `ark-network` is built with ES6 syntax, therefore building with truffle is not compatible
+The repository `ark-protocol` is built with ES6 syntax, therefore building with truffle is not compatible
 
 ### 1- Create a new directory
 ```sh
@@ -40,7 +40,7 @@ truffle init
 ### 2- Copy `/contracts` directory to `ark-deploy`
 
 ```sh
-cp -r ark-network/contracts ark-deploy 
+cp -r ark-protocol/contracts ark-deploy 
 
 ```
 
@@ -57,62 +57,7 @@ truffle migrate --network ganache
 
 ```
 
-## How The Identity Verification Process Works
-
-![logic-flow](/img/logic-flow.png)
-
-### Detailed Logic Flow:
-
-1- The user invoke `linkIdentity("ARWEAVE_ADDRESS")` function in the EVM registry contract.
-
-2- The user invoke `linkIdentity("EVM_ADDRESS", "EVM_INVOC_TXID_FROM_1", "EVM_NETWORK_KEY)` function in the Arweave oracle address.
-
-3- The non-verified identity get added in the Arweave oracle address:
-
-```json
-//user_object
-{
-  "arweave_address": "AeK_9yb3f3HEK1Gzwky6tIx8ujW9Pxr_FkhCkWftFtw", // the TX caller address
-  "evm_address": "0x197f818c1313dc58b32d88078ecdfb40ea822614", // the EVM identity to be verified
-  "verification_req": "0x5030f945f09e39af85986807293220b1daa736fdee6b490ae78eb150f155072d", // TXID of the interaction with the EVM sc
-  "ver_req_network": "AURORA-TESTNET", // the network KEY, where the verification_req took place
-  "identity_id": "ALcuqH1FfQvmx-8lL9P_fZJQQp0XUkcg7Sw5-PH9R7Q", // auto-generated, the SWC interactionTX.ID
-  "is_verified": false, // initial value
-  "is_evaluated": false, // initial value
-  "last_modification": 953910
-}
-
-```
-
-
-4- The node listens for new non-evaluated interactions (TXs) with the Arweave oracle SWC.
-
-5- For non-evaluated TX, the node call `getTransactionReceipt(verification_req)` and get TX's metadata.
-
-6- The metadata are used to validate that the `1` and `2` have been invoked by the same persona.
-
-7- If the EVM TX logs (emmited events) match the `3` TX's property `user_object.arweave_address` -- the identity is considered valid.
-
-8- The contract's admin invoke `verifyIdentity("arweave_address")` in the Arweave SWC address:
-
-```json
-// user_object
-{
-  "arweave_address": "AeK_9yb3f3HEK1Gzwky6tIx8ujW9Pxr_FkhCkWftFtw",
-  "evm_address": "0x197f818c1313dc58b32d88078ecdfb40ea822614",
-  "verification_req": "0x5030f945f09e39af85986807293220b1daa736fdee6b490ae78eb150f155072d",
-  "ver_req_network": "AURORA-TESTNET",
-  "identity_id": "ALcuqH1FfQvmx-8lL9P_fZJQQp0XUkcg7Sw5-PH9R7Q",
-  "is_verified": true,
-  "is_evaluated": true,
-  "last_modification": 965730,
-  "last_validation": 965730,
-  "validator": "vZY2XY1RD9HIfWi8ift-1_DnHLDadZMWrufSh-_rKF0"
-}
-
-```
-
-## Ark Network Contracts
+## Ark Protocol Contracts
 
 | Contract  | Source Code | Deployment | Network |
 | ------------- |:-------------:| :-------------: | :-------------: |
@@ -132,19 +77,63 @@ truffle migrate --network ganache
 
 
 
-## Ark Network API Methods
-set of public API methods for the Ark Network node
+## Ark Protocol API Methods
+set of public API methods for the Ark Protocol node
 
 - API endpoint (development - EXM testnet): https://ark-core.decent.land
 
-### 1- get Arweave oracle state
+### 1- get Arweave-EXM oracle state
 - `GET /v2/oracle/state`
 
-Reponse example: return the state of the Ark oracle smartweave oracle address
+Reponse example: return the state of the Ark EXM oracle
+
+```json
+{
+  "res": [
+    {
+      "arweave_address": "AeK_9yb3f3HEK1Gzwky6tIx8ujW9Pxr_FkhCkWftFtw",
+      "primary_address": "0x197f818c1313dc58b32d88078ecdfb40ea822614",
+      "did": "did:ar:AeK_9yb3f3HEK1Gzwky6tIx8ujW9Pxr_FkhCkWftFtw",
+      "is_verified": true,
+      "first_linkage": 1666632080000,
+      "last_modification": 1666665342000,
+      "unevaluated_addresses": [],
+      "addresses": [
+        {
+          "address": "0x197f818c1313dc58b32d88078ecdfb40ea822614",
+          "network": "BSC-MAINNET",
+          "ark_key": "EVM",
+          "verification_req": "0xa9bf5f00cb91e9dcf5e5c441b9b7fa8fa0078f3240a568d5d960f5a5e6e2ac56",
+          "is_verified": true,
+          "is_evaluated": true
+        }
+      ]
+    },
+    {
+      "arweave_address": "kaYP9bJtpqON8Kyy3RbqnqdtDBDUsPTQTNUCvZtKiFI",
+      "primary_address": "0x2A01d339d3ab41B2D8b145b5dF8586032D9961C6",
+      "did": "did:ar:kaYP9bJtpqON8Kyy3RbqnqdtDBDUsPTQTNUCvZtKiFI",
+      "is_verified": true,
+      "first_linkage": 1666632080000,
+      "last_modification": 1666665370000,
+      "unevaluated_addresses": [],
+      "addresses": [
+        {
+          "address": "0x2A01d339d3ab41B2D8b145b5dF8586032D9961C6",
+          "network": "ETH-MAINNET",
+          "ark_key": "EVM",
+          "verification_req": "0x22414bd42a59fefa4167cb5757a23b2d4560f3a055aa5bd1be48cad95dd1d778",
+          "is_verified": true,
+          "is_evaluated": true
+        }
+      ]
+    }
+  ]
+}
+```
 
 
-
-### 2- get network stats
+### 2- get protocol stats
 - `GET /v2/protocol/stats`
 
 Response example:
@@ -153,10 +142,10 @@ Response example:
 
 ```
 
-### 3- get network addresses
+### 3- get protocol smart contracts addresses
 - `GET /v2/protocol/addresses`
 
-Reponse example: return the validators addresses and the smart contracts addresses
+Reponse example: return the smart contracts addresses
 
 ```json
 {
@@ -216,7 +205,7 @@ Reponse example: return the validators addresses and the smart contracts address
 
 ```
 
-#### To get the active Arweave oracle contract, always use the `arweave_oracle_addr` from `/v2/protocol/addresses`
+#### To get the active Arweave-EXM oracle contract, always use the `exm_function_id` from `/v2/protocol/addresses`
 
 ### 4- get Ark profile metadata
 - `GET /v2/profile/:network/:address/:compress?`
