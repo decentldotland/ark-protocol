@@ -1,0 +1,47 @@
+{
+  "name": "ark-network",
+  "version": "0.5.4",
+  "type": "module",
+  "description": "Verifiable multichain identities",
+  "main": "./src/app.js",
+  "scripts": {
+    "polling": "node ./src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/decentldotland/ark-network"
+  },
+  "keywords": [
+    "arweave",
+    "identity",
+    "multichain",
+    "EVM"
+  ],
+  "author": "charmful0x",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/decentldotland/ark-network/issues"
+  },
+  "homepage": "https://github.com/decentldotland/ark-network#readme",
+  "dependencies": {
+    "@avvy/client": "^2.4.0",
+    "@execution-machine/sdk": "^0.1.41",
+    "arweave": "^1.11.4",
+    "axios": "^0.27.2",
+    "base64url": "^3.0.1",
+    "chalk": "^5.0.1",
+    "cors": "^2.8.5",
+    "crossbell.js": "^0.10.38",
+    "crypto-js": "^4.1.1",
+    "dotenv": "^16.0.1",
+    "ethers": "^5.6.8",
+    "express": "^4.18.1",
+    "near-api-js": "^0.45.1",
+    "node-cache": "^5.1.2",
+    "node-gzip": "^1.1.2",
+    "sha256": "^0.2.0",
+    "vouchdao": "^0.2.2",
+    "weave-aggregator": "^0.4.3",
+    "web3": "^1.7.3"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "admins": ["vZY2XY1RD9HIfWi8ift-1_DnHLDadZMWrufSh-_rKF0"],
+  "networks": [
+    "ARBITRUM_MAINNET",
+    "AURORA-MAINNET",
+    "AURORA-TESTNET",
+    "AVALANCHE-MAINNET",
+    "BSC-MAINNET",
+    "BSC-TESTNET",
+    "ETH-MAINNET",
+    "ETH-GOERLI",
+    "FUJI-C-CHAIN",
+    "FTM-MAINNET",
+    "NEON-DEVNET",
+    "OPTIMISM-MAINNET",
+    "POLYGON-MAINNET"
+  ],
+  "identities": [],
+  "verRequests": []
+}
