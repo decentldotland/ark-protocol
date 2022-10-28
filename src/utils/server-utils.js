@@ -3,6 +3,7 @@ import {
   ANS_CACHE_API,
   SERVER_ETH_RPC,
   AVALANCHE_MAINNET_RPC,
+  EVMOS_MAINNET_RPC,
   URBIT_ID_CONTRACT,
   LENS_LPP_CONTRACT,
 } from "./constants.js";
@@ -13,6 +14,8 @@ import { ethers } from "ethers";
 import { isVouched } from "vouchdao";
 import { Indexer } from "crossbell.js";
 import AVVY from "@avvy/client";
+import ENS from "@evmosdomains/sdk";
+import getName from "@evmosdomains/sdk";
 import axios from "axios";
 import base64url from "base64url";
 import "./setEnv.js";
@@ -74,6 +77,7 @@ export async function getArkProfile(network, address) {
       addressMetadata.ENS = await getEnsProfile(addr);
       addressMetadata.AVVY = await getAvvyProfile(addr);
       addressMetadata.LINAGEE = await getLinageeDomains(addr);
+      addressMetadata.EVMOS = await getEvmosProfile(addr);
         
       addressMetadata.LENS_HANDLES = await getLensHandles(addr);
       addressMetadata.GITPOAPS = await getGitPoaps(addr);
@@ -211,6 +215,24 @@ async function getAvvyProfile(evm_address) {
     const hash = await avvy.reverse(AVVY.RECORDS.EVM, evm_address);
     const name = await hash.lookup();
     return name.name;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+async function getEvmosProfile(evm_address) {
+  try {
+    const provider = new ethers.providers.JsonRpcProvider(
+      EVMOS_MAINNET_RPC
+    );
+    const evmos = new ENS.default({
+      provider,
+      ensAddress: ENS.getEnsAddress("9001"),
+    });
+
+    const domain = await evmos.getName(evm_address);
+    return domain?.name;
   } catch (error) {
     console.log(error);
     return false;
