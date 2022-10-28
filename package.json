@@ -1,6 +1,6 @@
 {
-  "name": "ark-network",
-  "version": "0.5.4",
+  "name": "ark-protocol",
+  "version": "0.5.5",
   "type": "module",
   "description": "Verifiable multichain identities",
   "main": "./src/app.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/decentldotland/ark-network"
+    "url": "https://github.com/decentldotland/ark-protocol"
   },
   "keywords": [
     "arweave",
@@ -20,11 +20,12 @@
   "author": "charmful0x",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/decentldotland/ark-network/issues"
+    "url": "https://github.com/decentldotland/ark-protocol/issues"
   },
-  "homepage": "https://github.com/decentldotland/ark-network#readme",
+  "homepage": "https://github.com/decentldotland/ark-protocol#readme",
   "dependencies": {
     "@avvy/client": "^2.4.0",
+    "@evmosdomains/sdk": "^1.1.0",
     "@execution-machine/sdk": "^0.1.41",
     "arweave": "^1.11.4",
     "axios": "^0.27.2",
