@@ -10,7 +10,7 @@
  *         ╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚═╝        ╚═╝░░╚══╝╚══════╝░░░╚═╝░░░░░░╚═╝░░░╚═╝░░░╚════╝░╚═╝░░╚═╝╚═╝░░╚═╝
  *
  * @title Ark Network Arweave oracle
- * @version EXM@v0.0.5
+ * @version EXM@v0.0.6
  * @author charmful0x
  * @license MIT
  * @website decent.land
@@ -46,6 +46,8 @@ export async function handle(state, action) {
   const ERROR_NETWORK_ALREADY_ADDED = `THE_GIVEN_NETWORK_EXISTS_ALREADY`;
   const ERROR_INVALID_NETWORK_TYPE = `INVALID_NETWORK_KEY_TYPE`;
   const ERROR_NETWORK_NOT_FOUND = `CANNOT_FIND_A_NETWORK_WITH_THE_GIVEN_KEY`;
+  const ERROR_INVALID_OWNER_TO_ADDRESS = `THE_GIVEN_OWNER_DOES_NOT_BELONG_TO_CALLER`;
+  const ERROR_INVALID_CALLER_SIGNATURE = `SIGNED_MESSAGE_CANNOT_BE_VERIFIED`;
 
   // CALLABLE FUNCTIONS
 
@@ -67,6 +69,8 @@ export async function handle(state, action) {
     const address = input?.address;
     const verificationReq = input?.verificationReq;
     const network = input?.network;
+    const sig = input?.sig;
+    const jwk_n = input.jwk_n;
 
     if (!caller && !address && !verificationReq && !network) {
       throw new ContractError(ERROR_FUNCTION_MISSING_ARGUMENTS);
@@ -85,10 +89,14 @@ export async function handle(state, action) {
     const currentTimestamp = await _getTimestamp();
 
     if (userIndex === -1) {
+      // first interaction with the contract verifies the caller
+      await _verifyArSignature(jwk_n, sig, caller);
+
       identities.push({
         arweave_address: caller,
         primary_address: address,
         did: `did:ar:${caller}`,
+        signature: sig,
         is_verified: false, // `true` when the user has his primary address evaluated & verified
         first_linkage: currentTimestamp,
         last_modification: currentTimestamp,
@@ -452,6 +460,22 @@ export async function handle(state, action) {
       return EXM.getDate().getTime();
     } catch (error) {
       return null;
+    }
+  }
+
+  async function _verifyArSignature(owner, signature, caller) {
+    try {
+      // 1- verify that jwk.n (owner) is the owner of the caller addr
+      const address = await SmartWeave.arweave.wallets.ownerToAddress(owner);
+      ContractAssert(address === caller, ERROR_INVALID_OWNER_TO_ADDRESS);
+      // 2- verify that the message has been signed by `caller`
+      const encodedMessage = new TextEncoder().encode(`my Arweave address for ARK is ${caller}`);
+      const typedArraySig = Uint8Array.from(atob(signature), c => c.charCodeAt(0));
+      const isValid = await SmartWeave.arweave.crypto.verify(owner, encodedMessage, typedArraySig);
+
+      ContractAssert(isValid, ERROR_INVALID_CALLER_SIGNATURE);
+    } catch(error) {
+      throw new ContractError(ERROR_INVALID_CALLER_SIGNATURE);
     }
   }
 }
