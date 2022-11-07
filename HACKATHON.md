@@ -8,7 +8,7 @@ This is a 4-week hackathon focused on developing multichain dApps on Arweave usi
 
 We are looking for submissions which integrate Ark as a core identity layer to a new or existing dApp.
 
-$11,000 in the prize pool (+ other bonuses)
+$12,000 in the prize pool (+ other bonuses)
 
 ## What's been built on Ark
 
