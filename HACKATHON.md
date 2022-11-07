@@ -8,7 +8,7 @@ This is a 4-week hackathon focused on developing multichain dApps on Arweave usi
 
 We are looking for submissions which integrate Ark as a core identity layer to a new or existing dApp.
 
-$12,000 in the prize pool (+ other bonuses)
+$11,000 in the prize pool (+ other bonuses)
 
 ## What's been built on Ark
 
@@ -46,8 +46,8 @@ _Reach out in the [Discord](https://discord.gg/decentland) with questions on how
 
 Prizes will be awarded to the individual/team that produces the best app on Ark Protocol while respecting the challenge description, goals, and criteria.
 
-- First prize: $4.5k USDC or AR + an [Ark NFT](http://mint.decent.land) of 0.3 ETH value
-- Runner-up pool: $6k USDC or AR, split between accepted entrants, with $1k minimum for accepted entries which meet the criteria
+- First prize: $6 USDC or AR + an [Ark NFT](http://mint.decent.land) of 0.3 ETH value
+- Runner-up pool: $5k USDC or AR, split between accepted entrants, with $1k minimum for accepted entries which meet the criteria
 - Participation POAPs for entries
 
 ## How to apply
