@@ -1,6 +1,8 @@
 # Ark Protocol Hackathon
 
-Ark is a multi-chain identity linking protocol. It allows users to associate their Arweave address with addresses on another chain, making it possible, for example, for an Arweave dApp to have proof that an Arweave user holds a cryptopunk on Ethereum, voted on a DAO proposal on Optimism, or holds a given ENS name.
+[Ark](https://ark.decent.land) is a multi-chain identity linking protocol.
+
+It allows users to associate their Arweave address with addresses on another chain, making it possible, for example, for an Arweave dApp to have proof that an Arweave user holds a cryptopunk on Ethereum, voted on a DAO proposal on Optimism, or holds a given ENS name.
 
 This is a 4-week hackathon focused on developing multichain dApps on Arweave using Ark Protocol.
 
@@ -10,19 +12,27 @@ $12,000 in the prize pool (+ other bonuses)
 
 ## What's been built on Ark
 
-**ar.page**
+**[ar.page](https://ar.page)**
 
-A social explorer for holders of ANS (Arweave Name Service) domains. Linked with Ark, it shows cross-chain NFTs and activity from EVM chains for Arweave users.
+A social explorer for holders of ANS (Arweave Name Service) domains -- [here's an example](https://xy.ar.page). Linked with Ark, it shows cross-chain NFTs and activity from EVM chains for Arweave users.
 
-**POAP -> Arweave airdrop bridge**
+* [Live deploy](https://ar.page)
+* [Source code](https://github.com/decentldotland/ANS_UI_2.0/)
+
+**[POAP -> Arweave airdrop bridge](https://twitter.com/decentdotland/status/1579010712600731648)**
 
 An app built to bridge POAP ownership to Arweave users. For example: a user scans a QR code for a POAP at an event; the POAP is an access ticket to an airdrop on Arweave; the user connects their xDAI (EVM, 0x) wallet to Ark protocol and can claim their airdrop.
 
+* [Live deploy](https://ar.page/claim)
+* [Source code](https://github.com/decentldotland/ans-lisbon-contract)
+
+_Reach out in the [Discord](https://discord.gg/decentland) with questions on how these work -- happy to help._
+
 ## Key dates
 
-Start date: 14th November 2022
-Submission deadline: 12th December 2022
-Judging deadline: 19th December 2022
+* Start date: 14th November 2022
+* Submission deadline: 12th December 2022
+* Judging deadline: 19th December 2022
 
 ## Rules
 
