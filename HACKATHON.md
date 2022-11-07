@@ -1,3 +1,5 @@
+# Ark Protocol Hackathon
+
 Ark is a multi-chain identity linking protocol. It allows users to associate their Arweave address with addresses on another chain, making it possible, for example, for an Arweave dApp to have proof that an Arweave user holds a cryptopunk on Ethereum, voted on a DAO proposal on Optimism, or holds a given ENS name.
 
 This is a 4-week hackathon focused on developing multichain dApps on Arweave using Ark Protocol.
