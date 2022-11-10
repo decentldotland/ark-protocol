@@ -10,6 +10,12 @@ We are looking for submissions which integrate Ark as a core identity layer to a
 
 $12,000 in the prize pool (+ other bonuses)
 
+## What Ark enables
+
+Ark enables users to prove identity and asset ownership cross-chain. For example, a dApp that uses Ark as part of its authentication flow could be built on Arweave but make use of attestations of NFTs and DIDs on Ethereum, NEAR, and other supported chains.
+
+It could be used to power token-gated groups, DAO voting, identity vouching, anti-sybil mechanisms, multichain social networks, and more.
+
 ## What's been built on Ark
 
 **[ar.page](https://ar.page)**
@@ -30,9 +36,8 @@ _Reach out in the [Discord](https://discord.gg/decentland) with questions on how
 
 ## Key dates
 
-* Start date: 14th November 2022
-* Submission deadline: 12th December 2022
-* Judging deadline: 19th December 2022
+* Start date: 21st November 2022
+* Submission deadline: 6th January 2023
 
 ## Rules
 
