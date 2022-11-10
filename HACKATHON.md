@@ -51,8 +51,8 @@ _Reach out in the [Discord](https://discord.gg/decentland) with questions on how
 
 Prizes will be awarded to the individual/team that produces the best app on Ark Protocol while respecting the challenge description, goals, and criteria.
 
-- First prize: $6 USDC or AR + an [Ark NFT](http://mint.decent.land) of 0.3 ETH value
-- Runner-up pool: $5k USDC or AR, split between accepted entrants, with $1k minimum for accepted entries which meet the criteria
+- First prize: $6k in USDC or AR + an [Ark NFT](http://mint.decent.land) of 0.3 ETH value
+- Runner-up pool: $5k in USDC or AR, split between accepted entrants, with $1k minimum for accepted entries which meet the criteria
 - Participation POAPs for entries
 
 ## How to apply
