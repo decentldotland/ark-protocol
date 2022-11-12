@@ -10,7 +10,7 @@
  *         ╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚═╝        ╚═╝░░╚══╝╚══════╝░░░╚═╝░░░░░░╚═╝░░░╚═╝░░░╚════╝░╚═╝░░╚═╝╚═╝░░╚═╝
  *
  * @title Ark Network Arweave oracle
- * @version EXM@v0.0.6
+ * @version EXM@v0.0.7
  * @author charmful0x
  * @license MIT
  * @website decent.land
@@ -28,26 +28,33 @@ export async function handle(state, action) {
   const verRequests = state.verRequests;
 
   // ERRORS CONSTANTS
-  const ERROR_FUNCTION_MISSING_ARGUMENTS = `INSUFFICIENT_HAVE_BEEN_SUPPLIED_TO_THE_FUNCTION`;
-  const ERROR_INVALID_USER = `CANNOT_FIND_USER_WITH_THE_GIVEN_ADDRESS`;
-  const ERROR_ADDRESS_NOT_OWNED = `THE_ARWEAVE_CALLER_DONT_OWN_THE_EXOTIC_ADDR`;
-  const ERROR_ADDRESS_ALREADY_PRIMARY = `THE_GIVEN_EXOTIC_ADDR_IS_ALREADY_PRIMARY`;
-  const ERROR_ERROR_UNLINKING_ADDRESS = `SOMETHING_WENT_WRONG_WHILE_UNLINKING_ADDRESSES`;
-  const ERROR_INVALID_EVALUATION = `EVALUATION_MUST_BE_A_BOOLEAN`;
-  const ERROR_ADDRESS_ALREADY_EVALUATED = `THE_GIVEN_ADDR_HAS_BEEN_ALREADY_EVALUATED`;
-  const ERROR_INVALID_ARWEAVE_ADDRESS = `INVALID_ARWEAVE_ADDR_SYNTAX`;
-  const ERROR_INVALID_DATA_TYPE = `INPUT_SUPPOSED_TO_BE_A_STRING`;
-  const ERROR_INVALID_EVM_ADDRESS_SYNTAX = `INVALID_EVM_ADDR_SYNTAX`;
-  const ERROR_INVALID_EVM_TXID_SYNTAX = `INVALID_EVM_TXID_SYNTAX`;
-  const ERROR_VER_ID_ALREADY_USED = `THE_GIVEN_VERIFICATION_REQUEST_HAS_BEEN_ALREADY_USED`;
-  const ERROR_INVALID_NETWORK_SUPPLIED = `INVALID_NETWORK_KEY_HAS_BEEN_SUPPLIED`;
-  const ERROR_ADDRESS_ALREADY_USED = `EXOTIC_ADDRESS_ALREADY_LINKED_TO_ANOTHER_USER`;
-  const ERROR_ADDRESS_ALREADY_USED_FOR_LINKAGE = `YOU_HAVE_ALREADY_ADDED_THIS_ADDRESS`;
-  const ERROR_NETWORK_ALREADY_ADDED = `THE_GIVEN_NETWORK_EXISTS_ALREADY`;
-  const ERROR_INVALID_NETWORK_TYPE = `INVALID_NETWORK_KEY_TYPE`;
-  const ERROR_NETWORK_NOT_FOUND = `CANNOT_FIND_A_NETWORK_WITH_THE_GIVEN_KEY`;
-  const ERROR_INVALID_OWNER_TO_ADDRESS = `THE_GIVEN_OWNER_DOES_NOT_BELONG_TO_CALLER`;
-  const ERROR_INVALID_CALLER_SIGNATURE = `SIGNED_MESSAGE_CANNOT_BE_VERIFIED`;
+  const ERROR_FUNCTION_MISSING_ARGUMENTS = `ERROR_INSUFFICIENT_HAVE_BEEN_SUPPLIED_TO_THE_FUNCTION`;
+  const ERROR_INVALID_USER = `ERROR_CANNOT_FIND_USER_WITH_THE_GIVEN_ADDRESS`;
+  const ERROR_ADDRESS_NOT_OWNED = `ERROR_THE_ARWEAVE_CALLER_DONT_OWN_THE_EXOTIC_ADDR`;
+  const ERROR_ADDRESS_ALREADY_PRIMARY = `ERROR_THE_GIVEN_EXOTIC_ADDR_IS_ALREADY_PRIMARY`;
+  const ERROR_ERROR_UNLINKING_ADDRESS = `ERROR_SOMETHING_WENT_WRONG_WHILE_UNLINKING_ADDRESSES`;
+  const ERROR_INVALID_EVALUATION = `ERROR_EVALUATION_MUST_BE_A_BOOLEAN`;
+  const ERROR_ADDRESS_ALREADY_EVALUATED = `ERROR_THE_GIVEN_ADDR_HAS_BEEN_ALREADY_EVALUATED`;
+  const ERROR_INVALID_ARWEAVE_ADDRESS = `ERROR_INVALID_ARWEAVE_ADDR_SYNTAX`;
+  const ERROR_INVALID_DATA_TYPE = `ERROR_INPUT_SUPPOSED_TO_BE_A_STRING`;
+  const ERROR_INVALID_EVM_ADDRESS_SYNTAX = `ERROR_INVALID_EVM_ADDR_SYNTAX`;
+  const ERROR_INVALID_EVM_TXID_SYNTAX = `ERROR_INVALID_EVM_TXID_SYNTAX`;
+  const ERROR_VER_ID_ALREADY_USED = `ERROR_THE_GIVEN_VERIFICATION_REQUEST_HAS_BEEN_ALREADY_USED`;
+  const ERROR_INVALID_NETWORK_SUPPLIED = `ERROR_INVALID_NETWORK_KEY_HAS_BEEN_SUPPLIED`;
+  const ERROR_ADDRESS_ALREADY_USED = `ERROR_EXOTIC_ADDRESS_ALREADY_LINKED_TO_ANOTHER_USER`;
+  const ERROR_ADDRESS_ALREADY_USED_FOR_LINKAGE = `ERROR_YOU_HAVE_ALREADY_ADDED_THIS_ADDRESS`;
+  const ERROR_NETWORK_ALREADY_ADDED = `ERROR_THE_GIVEN_NETWORK_EXISTS_ALREADY`;
+  const ERROR_INVALID_NETWORK_TYPE = `ERROR_INVALID_NETWORK_KEY_TYPE`;
+  const ERROR_NETWORK_NOT_FOUND = `ERROR_CANNOT_FIND_A_NETWORK_WITH_THE_GIVEN_KEY`;
+  const ERROR_INVALID_OWNER_TO_ADDRESS = `ERROR_THE_GIVEN_OWNER_DOES_NOT_BELONG_TO_CALLER`;
+  const ERROR_INVALID_CALLER_SIGNATURE = `ERROR_SIGNED_MESSAGE_CANNOT_BE_VERIFIED`;
+  const ERROR_INVALID_SIG_TYPE = `ERROR_INVALID_SIGNATURE_TYPE`;
+  const ERROR_INVALID_MODIFICATION_ACTION = `ERROR_INVALID_MODIFICATIONS_ACTION_PROVIDED`;
+  const ERROR_INVALID_SIG_MESSAGE_BODY = `ERROR_SIGNATURE_BODY_MUST_BE_NON_EMPTY_STRING`;
+  const ERROR_MESSAGE_NOT_FOUND = `ERROR_CANNOT_FIND_MSG_MATCHING_INPUT_MSG`;
+  const ERROR_CALLER_NOT_ADMIN = `ERROR_CALLER_MUST_BE_ADMIN`;
+  const ERROR_SIGNATURE_ALREADY_USED = `ERROR_REENTRANCY_SIGNATURE_USAGE`;
+  const ERROR_INVALID_JWK_N_SYNTAX = `ERROR_INVALID_ARWEAVE_PUBKEY_SYNTAX`;
 
   // CALLABLE FUNCTIONS
 
@@ -57,7 +64,8 @@ export async function handle(state, action) {
      * Arweave (master) address, linkable address are of
      * type "EVM" and "EXOTIC" (== non-EVM).
      *
-     * @param caller the caller's Arweave addr
+     * @param jwk_n the caller's Arweave public key
+     * @param sig verification message signed by the caller's pubkey
      * @param address the EVM or non-EVM address (foreign addr)
      * @param verificationReq the linkage TXID (on the foreign network)
      * @param network the network key
@@ -65,21 +73,21 @@ export async function handle(state, action) {
      * @return state
      **/
 
-    const caller = input.caller;
     const address = input?.address;
     const verificationReq = input?.verificationReq;
     const network = input?.network;
     const sig = input?.sig;
     const jwk_n = input.jwk_n;
 
-    if (!caller && !address && !verificationReq && !network) {
+    if (!jwk_n && !sig && !address && !verificationReq && !network) {
       throw new ContractError(ERROR_FUNCTION_MISSING_ARGUMENTS);
     }
 
-    _validateArweaveAddress(caller);
+    _validateOwnerSyntax(jwk_n);
     _checkAddrUsageDuplication(address);
+    await _verifyArSignature("user", jwk_n, sig);
 
-    const userIndex = _getUserIndex(caller);
+    const userIndex = _getUserIndex(jwk_n);
 
     // network checking is done inside `_validateAddrSig`
     _validateAddrSig(address, verificationReq, network);
@@ -89,14 +97,10 @@ export async function handle(state, action) {
     const currentTimestamp = await _getTimestamp();
 
     if (userIndex === -1) {
-      // first interaction with the contract verifies the caller
-      await _verifyArSignature(jwk_n, sig, caller);
-
       identities.push({
-        arweave_address: caller,
+        arweave_address: null,
+        public_key: jwk_n,
         primary_address: address,
-        did: `did:ar:${caller}`,
-        signature: sig,
         is_verified: false, // `true` when the user has his primary address evaluated & verified
         first_linkage: currentTimestamp,
         last_modification: currentTimestamp,
@@ -142,17 +146,19 @@ export async function handle(state, action) {
      * The identity (user) is considered verified only if the
      * chosen primary_address has been evaluated and is verified.
      *
-     * @param caller the caller's Arweave addr
+     * @param jwk_n the caller's Arweave public key
+     * @param sig verification message signed by the caller's pubkey
      * @param primary_address the chosen ((non)-EVM) primary addr
      *
      * @return state
      **/
-    const caller = input.caller;
     const primary_address = input.primary_address;
+    const jwk_n = input?.jwk_n;
+    const sig = input?.sig;
 
-    _validateArweaveAddress(caller);
-
-    const userIndex = _getUserIndex(caller);
+    _validateOwnerSyntax(jwk_n);
+    await _verifyArSignature("user", jwk_n, sig);
+    const userIndex = _getUserIndex(jwk_n);
     ContractAssert(userIndex >= 0, ERROR_INVALID_USER);
 
     const user = identities[userIndex];
@@ -171,7 +177,7 @@ export async function handle(state, action) {
     user.primary_address = primary_address;
     // user's verification is tied to the primary address validity
     user.is_verified = user.addresses[addressIndex].is_verified;
-    // log the update's blockheight
+    // log the update's timestamp
     user.last_modification = await _getTimestamp();
 
     return { state };
@@ -185,16 +191,19 @@ export async function handle(state, action) {
      * unlinking works in each case in detailed below in the function's
      * code blocks (1, 2a-b, & 3).
      *
-     * @param caller the caller's Arweave addr
+     * @param jwk_n the caller's Arweave public key
+     * @param sig verification message signed by the caller's pubkey
      * @param address the address to get unlinked
      *
      * @return state
      **/
-    const caller = input.caller;
     const address = input.address;
+    const jwk_n = input?.jwk_n;
+    const sig = input?.sig;
 
-    _validateArweaveAddress(caller);
-    const userIndex = _getUserIndex(caller);
+    _validateOwnerSyntax(jwk_n);
+    await _verifyArSignature("user", jwk_n, sig);
+    const userIndex = _getUserIndex(jwk_n);
 
     ContractAssert(userIndex >= 0, ERROR_INVALID_USER);
 
@@ -256,6 +265,31 @@ export async function handle(state, action) {
     throw new ContractError(ERROR_ERROR_UNLINKING_ADDRESS);
   }
 
+  if (input.function === "getIdentity") {
+    const arweave_address = input.arweave_address;
+    const primary_address = input.primary_address;
+
+    if (arweave_address) {
+      const identity = identities.find(
+        (id) => id.arweave_address === arweave_address && id.is_verified
+      );
+      return {
+        result: identity,
+      };
+    }
+
+    if (primary_address) {
+      const identity = identities.find(
+        (id) => id.primary_address === primary_address && id.is_verified
+      );
+      return {
+        result: identity,
+      };
+    }
+
+    throw new ContractError(ERROR_FUNCTION_MISSING_ARGUMENTS);
+  }
+
   // ADMIN FUNTIONS
 
   if (input.function === "evaluate") {
@@ -263,25 +297,38 @@ export async function handle(state, action) {
      * @dev it's an admin's function automated
      * by the Ark Protocol node. The function push the
      * node's evaluation result of an identity linkage
-     * request into the contract's state.
+     * request into the contract's state. For the first
+     * linkage verification of an identity, the AR address
+     * (not public key) get assigned to the identity object.
      *
+     * @param user_pubkey the pub key of the evaluated identity
+     * @param admin_jwk_n the caller's Arweave public key (admin)
+     * @param admin_sig verification message signed by the admin's pubkey
      * @param arweave_address the identity's Master address
      * @param evaluated_address the request's foreign addr
      * @param evaluation the evaluation's result
      *
      * @return state
+     *
      **/
     const arweave_address = input.arweave_address;
+    const user_pubkey = input.user_pubkey;
     const evaluated_address = input.evaluated_address;
     const evaluation = input.evaluation;
+    const admin_jwk_n = input.admin_jwk_n;
+    const admin_sig = input.admin_sig;
+
+    _validateOwnerSyntax(user_pubkey);
+    _validateOwnerSyntax(admin_jwk_n);
+    arweave_address ? _validateArweaveAddress(arweave_address) : void 0;
+    await _verifyArSignature("admin", admin_jwk_n, admin_sig);
 
     ContractAssert(
       [true, false].includes(evaluation),
       ERROR_INVALID_EVALUATION
     );
 
-    _validateArweaveAddress(arweave_address);
-    const userIndex = _getUserIndex(arweave_address);
+    const userIndex = _getUserIndex(user_pubkey);
     ContractAssert(userIndex >= 0, ERROR_INVALID_USER);
 
     const user = identities[userIndex];
@@ -305,6 +352,11 @@ export async function handle(state, action) {
       user.is_verified = evaluation;
     }
 
+    if (!user.arweave_address) {
+      // assign Arweave address for the
+      // evaluation for new identities (1st linkage)
+      user.arweave_address = arweave_address;
+    }
     user.addresses[evaluatedAddrIndex].is_verified = evaluation;
     user.addresses[evaluatedAddrIndex].is_evaluated = true;
     //  remove the address from the unevalated_addresses array
@@ -323,14 +375,20 @@ export async function handle(state, action) {
     /**
      * @dev append a new KEY for a newly supported network.
      *
+     * @param jwk_n the caller's Arweave public key (admin)
+     * @param sig verification message signed by the caller's pubkey
      * @param network_key the new network's KEY
      * @param type network's type ("EVM" or "EXOTIC")
      *
      * @return state
      *
      **/
+    const jwk_n = input.jwk_n;
+    const sig = input.sig;
     const network_key = input.network_key;
     const type = input.type;
+
+    await _verifyArSignature("admin", jwk_n, sig);
 
     ContractAssert(
       !networks.includes(network_key),
@@ -352,15 +410,20 @@ export async function handle(state, action) {
     /**
      * @dev remove a network support from the networks array
      *
+     * @param jwk_n the caller's Arweave public key (admin)
+     * @param sig verification message signed by the caller's pubkey
      * @param network_key the KEY of the network to be removed
      * @param type network's type ("EVM" or "EXOTIC")
      *
      * @return state
      *
      **/
+    const jwk_n = input.jwk_n;
+    const sig = input.sig;
     const network_key = input.network_key;
     const type = input.type;
 
+    await _verifyArSignature("admin", jwk_n, sig);
     ContractAssert(networks.includes(network_key), ERROR_NETWORK_NOT_FOUND);
     ContractAssert(
       ["EVM", "EXOTIC"].includes(type),
@@ -379,6 +442,52 @@ export async function handle(state, action) {
     return { state };
   }
 
+  if (input.function === "modifySigMsg") {
+    /**
+     * @dev update the messages string literal used
+     * for caller's validation. The last message
+     * in the messages array is used for signatures verification
+     *
+     * @param jwk_n the caller's Arweave public key (admin)
+     * @param sig verification message signed by the caller's pubkey
+     * @param type the message reference (user or admin)
+     * @param action modification action (add or remove)
+     * @param message the new validation message string literal
+     *
+     * @return state
+     *
+     **/
+    const jwk_n = input.jwk_n;
+    const sig = input.sig;
+    const type = input.type;
+    const action = input.action;
+    const message = input.message;
+
+    _validateOwnerSyntax(jwk_n);
+    await _verifyArSignature("admin", jwk_n, sig);
+    ContractAssert(["user", "admin"].includes(type), ERROR_INVALID_SIG_TYPE);
+    ContractAssert(
+      ["add", "remove"].includes(action),
+      ERROR_INVALID_MODIFICATION_ACTION
+    );
+
+    if (action === "add") {
+      const property = `${type}_sig_messages`;
+      ContractAssert(
+        typeof message === "string" && message.length,
+        ERROR_INVALID_SIG_MESSAGE_BODY
+      );
+      state[property].push(message);
+      return { state };
+    }
+
+    const messagesArray = state[`${type}_sig_messages`];
+    const messageIndex = messagesArray.findIndex((msg) => msg === message);
+    ContractAssert(messageIndex >= 0, ERROR_MESSAGE_NOT_FOUND);
+    messagesArray.splice(messageIndex, 1);
+    return { state };
+  }
+
   // HELPER FUNCTIONS
 
   function _validateArweaveAddress(address) {
@@ -388,10 +497,15 @@ export async function handle(state, action) {
     );
   }
 
-  function _getUserIndex(address) {
-    const index = identities.findIndex(
-      (usr) => usr.arweave_address === address
+  function _validateOwnerSyntax(owner) {
+    ContractAssert(
+      typeof owner === "string" && owner?.length === 683,
+      ERROR_INVALID_JWK_N_SYNTAX
     );
+  }
+
+  function _getUserIndex(pub_key) {
+    const index = identities.findIndex((usr) => usr.public_key === pub_key);
     return index;
   }
 
@@ -463,18 +577,35 @@ export async function handle(state, action) {
     }
   }
 
-  async function _verifyArSignature(owner, signature, caller) {
+  async function _verifyArSignature(type, owner, signature) {
     try {
-      // 1- verify that jwk.n (owner) is the owner of the caller addr
-      const address = await SmartWeave.arweave.wallets.ownerToAddress(owner);
-      ContractAssert(address === caller, ERROR_INVALID_OWNER_TO_ADDRESS);
-      // 2- verify that the message has been signed by `caller`
-      const encodedMessage = new TextEncoder().encode(`my Arweave address for ARK is ${caller}`);
-      const typedArraySig = Uint8Array.from(atob(signature), c => c.charCodeAt(0));
-      const isValid = await SmartWeave.arweave.crypto.verify(owner, encodedMessage, typedArraySig);
+      ContractAssert(["user", "admin"].includes(type), ERROR_INVALID_SIG_TYPE);
+
+      const sigBody =
+        type === "user" ? state.user_sig_messages : state.admin_sig_messages;
+
+      if (type === "admin") {
+        ContractAssert(owner === state.contract_admin, ERROR_CALLER_NOT_ADMIN);
+      }
+      const encodedMessage = new TextEncoder().encode(
+        `${sigBody[sigBody.length - 1]}${owner}`
+      );
+      const typedArraySig = Uint8Array.from(atob(signature), (c) =>
+        c.charCodeAt(0)
+      );
+      const isValid = await SmartWeave.arweave.crypto.verify(
+        owner,
+        encodedMessage,
+        typedArraySig
+      );
 
       ContractAssert(isValid, ERROR_INVALID_CALLER_SIGNATURE);
-    } catch(error) {
+      ContractAssert(
+        !state.signatures.includes(signature),
+        ERROR_SIGNATURE_ALREADY_USED
+      );
+      state.signatures.push(signature);
+    } catch (error) {
       throw new ContractError(ERROR_INVALID_CALLER_SIGNATURE);
     }
   }
