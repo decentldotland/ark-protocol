@@ -1,6 +1,7 @@
 import nearAPI from "near-api-js";
 import base64url from "base64url";
 import { NEAR_MAINNET_ADDRESS } from "../constants.js";
+import { ownerToAddress } from "../arweave/network.js";
 const { connect, Contract } = nearAPI;
 
 const connectionConfig = {
@@ -15,6 +16,7 @@ export async function canBeVerifiedNear({
   verificationReq,
   arweave_address,
   exotic_address,
+  public_key,
 } = {}) {
   try {
     const nearConnection = await connect(connectionConfig);
@@ -47,6 +49,10 @@ export async function canBeVerifiedNear({
     const decodedArgs = JSON.parse(base64url.decode(contractAction?.args));
 
     if (decodedArgs?.arweave_addr !== arweave_address) {
+      return false;
+    }
+
+    if ( (await ownerToAddress(public_key)) !== arweave_address) {
       return false;
     }
 
