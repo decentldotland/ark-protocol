@@ -60,7 +60,7 @@ async function readNearOracleState() {
     );
 
     const state = await contract.readArkState();
-    console.log(state);
+
     return state;
   } catch (error) {
     console.log(error);
@@ -109,7 +109,7 @@ async function addUserIndentityNear(newIdentity) {
 async function getUserObject(arweave_address) {
   try {
     const arkState = (await evaluateOracleState())?.identities;
-    const identity = arkState.find((id) => id.arweave_address === arweave_address);
+    const identity = arkState.find((id) => (id.arweave_address === arweave_address) && id.is_verified);
 
     return identity;
   } catch (error) {
