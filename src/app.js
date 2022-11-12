@@ -81,6 +81,6 @@ app.get("/v2/profile/:network/:address/:compress?", async (req, res) => {
 app.listen(port, async () => {
   while (true) {
     await runPolling();
-    console.log(`listening at PORT: ${port}`);
+    console.log(`Ark Protocol running on PORT: ${port}`);
   }
 });
