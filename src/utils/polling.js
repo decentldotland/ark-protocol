@@ -1,27 +1,25 @@
 import { getLastInteractionBlock } from "./arweave/graphql.js";
 import { getArweaveBlock } from "./arweave/network.js";
-import { checkAndVerifyUser } from "./arweave/smartweave.js";
+import { checkAndVerifyUser } from "./arweave/evaluation.js";
 import { evaluateOracleState } from "./arweave/exm-rwx.js";
 import NodeCache from "node-cache";
 import base64url from "base64url";
 import sha256 from "sha256";
 
-
 export async function runPolling() {
   try {
-      const oracleState = await evaluateOracleState();
-      const filteredState = await _filterState(oracleState);
+    const oracleState = await evaluateOracleState();
+    const filteredState = await _filterState(oracleState);
 
-      for (const user of filteredState) {
-        await checkAndVerifyUser(user);
-      }
+    for (const user of filteredState) {
+      await checkAndVerifyUser(user);
+    }
 
-      await sleep(20)
+    await sleep(20);
   } catch (error) {
     console.log(error);
   }
 }
-
 
 async function _filterState(state) {
   // filter evaluated users
@@ -37,5 +35,5 @@ async function _filterState(state) {
 }
 
 export async function sleep(s) {
-    return new Promise(resolve => setTimeout(resolve, s*1e3));
-    }
+  return new Promise((resolve) => setTimeout(resolve, s * 1e3));
+}
