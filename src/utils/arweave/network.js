@@ -26,3 +26,12 @@ export async function sleepBlockCount(count) {
   console.log(green(`\n\nsleeping for ${blocks} Arweave network blocks (~${blocks * 2} minutes)\n\n`));
   return new Promise((resolve) => setTimeout(resolve, blocks * 2 * 60 * 1000));
 }
+
+export async function ownerToAddress(pub_key) {
+  try {
+    const address = await arweave.wallets.ownerToAddress(pub_key);
+    return address;
+  } catch(error) {
+    return false;
+  }
+}
