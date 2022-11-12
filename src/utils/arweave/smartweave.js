@@ -7,21 +7,23 @@ import { red, green } from "../chalk.js";
 import { canBeVerifiedNear } from "../near/config.js";
 import { mirrorStateToNear } from "../near/ark-oracle-utils.js";
 import { resolveNetworkKey } from "../evm/ethers.js";
+import { ownerToAddress } from "./network.js";
+import { generateAdminSignature } from "./sign.js";
 import { sleep } from  "../polling.js";
 import "../setEnv.js";
 
 export async function checkAndVerifyUser(userObject) {
   try {
     const {
+      public_key,
       arweave_address,
       primary_address,
       unevaluated_addresses,
-      addresses,
-      did,
+      addresses
     } = userObject;
 
     if (!unevaluated_addresses.length) {
-      console.log(green(`\nall addresses for ${did} have been evaluated\n`));
+      console.log(green(`\nall addresses for ${public_key} have been evaluated\n`));
       return;
     }
 
@@ -30,6 +32,7 @@ export async function checkAndVerifyUser(userObject) {
     );
 
     for (const address of toEvaluateAddresses) {
+      const adminSignature = await generateAdminSignature();
       const exmNetKey = (await resolveNetworkKey(address.network))?.EXM_KEY;
 
       if (exmNetKey === "EVM") {
@@ -38,19 +41,21 @@ export async function checkAndVerifyUser(userObject) {
           address.network
         );
         if (!EVM_ORACLES_CONTRACTS.includes(evmVerificationReq.to)) {
-          await writeEvaluation(arweave_address, address.address, false, address.network);
+          await writeEvaluation(public_key, arweave_address, address.address, false, address.network);
         }
 
         const hashedArAddressLog = evmVerificationReq.logs[0].topics[2];
 
+        const resolvedArweaveAddr = await ownerToAddress(public_key);
         const validity = await checkTopicAgainstAddress(
           hashedArAddressLog,
-          arweave_address
+          resolvedArweaveAddr
         );
 
         const identityValidity = validity.is_equal ? true : false;
 
         await writeEvaluation(
+          public_key,
           arweave_address,
           address.address,
           identityValidity,
@@ -58,7 +63,7 @@ export async function checkAndVerifyUser(userObject) {
         );
 
         await sleep(10);
-        await mirrorStateToNear(arweave_address);
+        // await mirrorStateToNear(arweave_address);
       }
 
       if (exmNetKey === "EXOTIC") {
@@ -67,9 +72,11 @@ export async function checkAndVerifyUser(userObject) {
           arweave_address: arweave_address,
           verificationReq: address.verification_req,
           exotic_address: address.address,
+          public_key: public_key
         });
 
         await writeEvaluation(
+          public_key,
           arweave_address,
           address.address,
           isVerifiable,
@@ -77,7 +84,7 @@ export async function checkAndVerifyUser(userObject) {
         );
 
         await sleep(10);
-        await mirrorStateToNear(arweave_address);
+        // await mirrorStateToNear(arweave_address);
       }
     }
   } catch (error) {
