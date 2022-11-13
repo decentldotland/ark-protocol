@@ -43,14 +43,14 @@ exm function:write YOUR_EXM_FUNCTION_ID --input '{"function": "addNetwork", "net
 
 ```
 
-### 6- Remove network key
+### 7- Remove network key
 
 ```console
 exm function:write YOUR_EXM_FUNCTION_ID --input '{"function": "removeNetwork", "network_key": "KEY_VALUE", "type": "EVM_OR_EXOTIC", "jwk_n": "ADMIN_PUB_KEY", "sig": "ADMIN_SIGNED_MESSAGE"}' --token YOUR_EXM_TOKEN_ID
 
 ```
 
-### 7- Update signature messages
+### 8- Update signature messages
 
 ```console
 exm function:write YOUR_EXM_FUNCTION_ID --input '{"function": "modifySigMsg", "message": "NEW_SIG_MESSAGE_STR", "type": "USER_OR_ADMIN", "action": "ADD_OR_REMOVE", "jwk_n": "ADMIN_PUB_KEY", "sig": "ADMIN_SIGNED_MESSAGE"}' --token YOUR_EXM_TOKEN_ID
