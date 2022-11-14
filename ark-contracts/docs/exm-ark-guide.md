@@ -43,16 +43,149 @@ exm function:write YOUR_EXM_FUNCTION_ID --input '{"function": "addNetwork", "net
 
 ```
 
-### 7- Remove network key
+### 6- Remove network key
 
 ```console
 exm function:write YOUR_EXM_FUNCTION_ID --input '{"function": "removeNetwork", "network_key": "KEY_VALUE", "type": "EVM_OR_EXOTIC", "jwk_n": "ADMIN_PUB_KEY", "sig": "ADMIN_SIGNED_MESSAGE"}' --token YOUR_EXM_TOKEN_ID
 
 ```
 
-### 8- Update signature messages
+### 7- Update signature messages
 
 ```console
 exm function:write YOUR_EXM_FUNCTION_ID --input '{"function": "modifySigMsg", "message": "NEW_SIG_MESSAGE_STR", "type": "USER_OR_ADMIN", "action": "ADD_OR_REMOVE", "jwk_n": "ADMIN_PUB_KEY", "sig": "ADMIN_SIGNED_MESSAGE"}' --token YOUR_EXM_TOKEN_ID
 
 ```
+
+## JS Usage
+
+### Prerequisites
+
+#### Libraries
+
+```sh
+npm  install axios @execution-machine/sdk
+```
+#### Retrieving wallet's public key
+- using Arconnect: [method](https://github.com/arconnectio/ArConnect#getactivepublickey-promisestring) 
+
+- using JWK for NodeJS (not recommended, users/devs MUST NOT expose their JWK in production): 
+```js 
+JSON.parse(JWK_BURNER_WALLET_OBJECT)?.n
+````
+
+#### Generating wallet signature
+- using Arconnect: [method](https://github.com/arconnectio/ArConnect#signaturedata-options-promiseuint8array)
+
+- using NodeJS (dev mode - JWK MUST NOT be exposed):
+
+```js
+import Arweave from "arweave";
+// initialize Arweave - create instance
+const arweave = Arweave.init({
+  host: "arweave.net",
+  protocol: "https",
+  port: 443,
+  timeout: 60000,
+  logging: false,
+});
+
+const BURNER_WALLET_JWK = JSON.parse(process.env.BURNER_WALLET_JWK);
+
+async function generateAdminSignature(messageBody) {
+    const message = new TextEncoder().encode(`${messageBody}${BURNER_WALLET_JWK.n}`);
+    const signature = await arweave.crypto.sign(BURNER_WALLET_JWK, message);
+    console.log(signature.toString("base64"));
+
+    return signature.toString("base64");
+}
+```
+
+***N.B: in both cases, the signed message should be stringified before passing it to the contract (base64 encoding)***
+
+### Reading Ark contract
+
+### Using axios
+
+```js
+import axios from "axios";
+
+async function readOracle(EXM_ARK_CONTRACT_ID) {
+	try {
+		const state = await axios.get(`https://api.exm.dev/read/${EXM_ARK_CONTRACT_ID}`);
+		console.log(state);
+		return state;
+	} catch(error) {
+		console.log(error);
+		return false;
+	}
+}
+```
+
+### Using EXM SDK
+
+```js
+import { Exm } from "@execution-machine/sdk";
+
+const exmInstance = new Exm({ token: process.env.YOUR_EXM_TOKEN });
+
+export async function evaluateOracleState() {
+  try {
+    const state = await exmInstance.functions.read(EXM_ARK_CONTRACT_ID);
+    return state;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+
+
+```
+
+## Write operations (interacting with Ark contract)
+
+### Linking identity
+
+function [definition - reference](https://github.com/decentldotland/ark-protocol/blob/main/ark-contracts/arweave/exm-ark.js#L61)
+
+```js
+import { Exm } from "@execution-machine/sdk";
+
+const exmInstance = new Exm({ token: process.env.YOUR_EXM_TOKEN });
+const EXM_ARK_CONTRACT = "...";
+
+async function linkIdentity() {
+  try {
+    const inputs = [
+      {
+        function: "linkIdentity",
+        jwk_n: "PUB_KEY", // the public key of the identity's Arweave wallet address
+        address: "FOREIGN_ADDR", // the (non)EVM wallet address to be linked with the identity
+        network: "NETWORK_KEY", // network key (Ark domain definition) where the (non)EVM linkage request too place
+        verificationReq: "FOREIGN_LINKAGE_TXID", // (non)EVM linkage request TXID
+        sig: "BASE64_SIGNATURE_STRING", // a message signed by the same wallet of the passed public key (jwk_n) as base64 string
+        								// check example https://github.com/decentldotland/ark-protocol/blob/main/src/utils/arweave/sign.js#L7
+      },
+    ];
+
+    const interaction = await exmInstance.functions.write(
+      EXM_ARK_CONTRACT,
+      inputs
+    );
+
+    if (interaction.status === "SUCCESS") {
+      console.log(`interaction id: ${interaction?.data?.pseudoId}`);
+      return;
+    }
+  } catch (error) {
+    console.log(`interaction failed:\n`);
+    console.log(error);
+  }
+}
+
+
+```
+
+## Dev support
+For any further support, join our [Discord server](https://discord.gg/decentland)
