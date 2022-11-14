@@ -111,14 +111,16 @@ async function generateAdminSignature(messageBody) {
 import axios from "axios";
 
 async function readOracle(EXM_ARK_CONTRACT_ID) {
-	try {
-		const state = await axios.get(`https://api.exm.dev/read/${EXM_ARK_CONTRACT_ID}`);
-		console.log(state);
-		return state;
-	} catch(error) {
-		console.log(error);
-		return false;
-	}
+  try {
+    const state = await axios.get(
+      `https://api.exm.dev/read/${EXM_ARK_CONTRACT_ID}`
+    );
+    console.log(state);
+    return state;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }
 ```
 
