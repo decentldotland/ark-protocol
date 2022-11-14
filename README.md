@@ -56,6 +56,8 @@ truffle compile
 truffle migrate --network ganache
 
 ```
+## Integrating Ark Protocol
+Check these [docs](./ark-contracts/docs/exm-ark-guide.md) to learn how to intergrate Ark Protocol in your app.
 
 ## Ark Protocol Contracts
 
@@ -89,14 +91,34 @@ Reponse example: return the state of the Ark EXM oracle
 
 ```json
 {
-  "res": [
+  "contract_admin": "xGx07uNnjitWsOSfKZC-ic74oXs9qDXU5QOsAis4V3tXk0krk5zUlGYu7SlZ-4xfNVA1QsHa_pOvlgE-0xGKJvMZRZYzlYcBDsnDJgLYQc5D2B2Ng4HQjLON-Gqsxl25Uj7-VSEeUgk5b2Q4SrAoVTKLWKEtuGDqwy5qKKCvNHYShYJHbmAsjQzwCwvfn2bqKv_zFUD4QeukihfDJbVyZaiev7GoE1NzTsqJ_V_eZ9tKV_5YVy-ZVU8a9dEeTnGJm2rT6z9aCcQwd9EqVYi7h8QCbKOn2r5K2NbD6V8xjQGHvODHMO0iHk2hLzcLbfDfyn_Ej-xZsHU6LBJCTeDBy_5kWtOVlYL_RH34UA1j_IYEMVDYnQBKo5laassByvkn7nODZiXesvw6TsXPYdrqrgIL7x4Td5QVK8UHXCGXOrtAlhxfzNWyjP0z5ezAsQpzGPgGI9OKgjmPIk4K6K88BoxNmJ_XFPV1DN8qZGsPSVz2N7XN9wFetDs4CMOGyDToTDEea77TsP1ykKMcXf2h-JCZlvzFEpxS_zMaRMcwV502zXN01oCR2QpUEISf_IzxQYXsjR_F75VPpUvfmDtPYf4ftQN1cZYiH68zxn74uO7DLqIa3nUXq_IrUP7SmEnbMgjzjElp0a_u62XtmgT3GQv7SBrQdzym3yhhM-3kcok",
+  "evm_networks": [
+    "AURORA-MAINNET",
+    "AURORA-TESTNET",
+    "BSC-MAINNET",
+    "BSC-TESTNET",
+    "ETH-MAINNET",
+    "ETH-GOERLI",
+    "EVMOS-MAINNET",
+    "NEON-DEVNET",
+    "AVALANCHE-MAINNET",
+    "FUJI-C-CHAIN",
+    "FTM-MAINNET",
+    "OPTIMISM-MAINNET",
+    "ARBITRUM-MAINNET",
+    "POLYGON-MAINNET"
+  ],
+  "exotic_networks": ["NEAR-MAINNET"],
+  "user_sig_messages": ["my pubkey for DL ARK is: "],
+  "admin_sig_messages": ["DL ARK Admin pubkey of: "],
+  "identities": [
     {
       "arweave_address": "AeK_9yb3f3HEK1Gzwky6tIx8ujW9Pxr_FkhCkWftFtw",
+      "public_key": "sD21HRnVaS-RMrE5_qRk5tBwq2LjUjUevsZBGT2ZoIEj7U0TMfcPxpmNQ0ZRTLnIm-Y3IEX7vesZ0MqUiF7f6IZb4RTIPCkWaZdNBZWwLJIVARB0tS5W-eruTe838Zuo5Ly0N-LOaaWS5hGPKRj2LsSMbdhFvkZHnJP7TMgxmwukwtV7aBVSf6lWVpr20cQXzu9IRaKhStrJHa6VEhLH6-DzJKnqLwYNDZ7V8rIKRJsdQQFec7OOgOjdvrZ5sRnIWrgt3c0O0giW7L5lHMVKSAZowBlap5wjwbus61amfajD4wTAndZcBBZTSQ-ijToLmR4T2q3skDG4BlMcr132lgPpYDtHX4qv6Joy0Wx2XIUWCY8QsPSjcG8FpIAB3JwqM6RJkM3ipGwR8WZ-vHhUcZq7fw0K342j5R_renrQ0bDAmQhsIy3Qx-S56eRpkxcYJNzn_XbmXzbxE584DXkvNkpYlS_Z3kUccDJRgyY1Asq76kdhV6x2PzqCCIvBEXdWX5pUMU5FBt3KS9GNeYJKoQxcDxKNINomvLLkA4v_80LBAQNIPIO0yVPA3FLpyYW3MJ7Q-pwzx-tsupX6bE58EkhiGlg6j9MTl6kvEYMM7yM0AXT2MoOGL9M2lAfNr-xj1BE3CyKa-uz_6N1xrNu8ulgdi8TYCMRdlkkeb7BwsPc",
       "primary_address": "0x197f818c1313dc58b32d88078ecdfb40ea822614",
-      "did": "did:ar:AeK_9yb3f3HEK1Gzwky6tIx8ujW9Pxr_FkhCkWftFtw",
       "is_verified": true,
-      "first_linkage": 1666632080000,
-      "last_modification": 1666665342000,
+      "first_linkage": 1668244496000,
+      "last_modification": 1668244588000,
       "unevaluated_addresses": [],
       "addresses": [
         {
@@ -108,28 +130,17 @@ Reponse example: return the state of the Ark EXM oracle
           "is_evaluated": true
         }
       ]
-    },
-    {
-      "arweave_address": "kaYP9bJtpqON8Kyy3RbqnqdtDBDUsPTQTNUCvZtKiFI",
-      "primary_address": "0x2A01d339d3ab41B2D8b145b5dF8586032D9961C6",
-      "did": "did:ar:kaYP9bJtpqON8Kyy3RbqnqdtDBDUsPTQTNUCvZtKiFI",
-      "is_verified": true,
-      "first_linkage": 1666632080000,
-      "last_modification": 1666665370000,
-      "unevaluated_addresses": [],
-      "addresses": [
-        {
-          "address": "0x2A01d339d3ab41B2D8b145b5dF8586032D9961C6",
-          "network": "ETH-MAINNET",
-          "ark_key": "EVM",
-          "verification_req": "0x22414bd42a59fefa4167cb5757a23b2d4560f3a055aa5bd1be48cad95dd1d778",
-          "is_verified": true,
-          "is_evaluated": true
-        }
-      ]
     }
+  ],
+  "verRequests": [
+    "0xa9bf5f00cb91e9dcf5e5c441b9b7fa8fa0078f3240a568d5d960f5a5e6e2ac56"
+  ],
+  "signatures": [
+    "X2bSBgTVp3qbIh0DE+GQ9gGYYzlMsrW5lR+P9Rwt07ap9jmBJDJ+WCTLALBIZpp9ZfnxcWtdljYf0CTKZjx4bKfacPQCi2Sln3q2cj5AHpLJtVPhU76uUviGF/gzRDCQaHye1XOLWzm+z/zRxwNtburfoZxufWqbuDw8UdF+/tOoZSrP4qJ9PMvzYx5ScrsbzlW0iLHgIf2vPG5J9uqzHBOAlali8UKvmrSDdrKnO+sKvPnXV/GNEguicbTWzkgTswU2RXzzZPfip/KurOPeb/u8/nCvwwPLZ52Y9YQpUV3TVRSSdmxH5GxY1CArj76qp1sTzaKs6NVI/zDwNqwmbS5CrH82AAsKTXfxxq748676XWXLOfOR603Lebhgnp8+p7nMPT9FfMjQL6XEWUH1fskSSn436I6RQVGT52ZhiRXqEtwQttWjKxmzpuGHYqlzBSDldg3f52MD8RAQ2K+X+lKOMNFibNbfaK1QrSdrkmdRUiyIrjKjAUwQSFR6BqE544oJmPhxVpGh2XCQ0R1TCNSU0kAGrXZ9bvTpaK/1WRdIjFrXGJVjPRoTeJ2bGOeahMOyHKPDvKJLaCNtqsaTNFgiEl5XArBx9u/ddPEWVvbIzieUlUdNfWWcvs+d0tU0fBxleRBMQ16yybSKASqWFdORSRUbPc16j6z0DpWFxEw=",
+    "AbVGYi63mp4YjkK6xIqQ1WSOE0wRSClFX7FlnQbWhUgIOSOnzJBeEB+Pc7NKpEUtFnW8VA0YxmveE7OOzLDXvd35mpH+ON/+JUIwxIwPxMFQybri8f02vien649EoqafayuHXQc41d3WB+VKkyNn0RF+M9m1ZUPWaWbuxyDlttC3axccA96P4rZ7A+T+hsM7uB+a0S/mLhBBOUWPsD5fhsu2dRQZY4oj+kj+n31InilYN+inkQ4eat52tbG+bOqagC8rAHVOCciRYXQHoxJa3gj5etsrRPDu+2Tx/d8AJ9hmbyhWTA517O4AlMFvGcXsk7VUCqq0zit1yuXofTyEbDVyL24/XqFPGa54NnWbwyNMWiZbAvVv9CJNh6Lm4YTVAOOATiWiABkfNBA5/oRZD8F0zcuqFZ35/okatXs26BW4it7HD0M5MMNYj+IgbYSfh3BnFaEJiGTR4Uy7LtlJtubORz+cqZpmN8EjjsDp1iMyyCP1RGDYF4vZTy7xKw5pXjuWozrp6XXvPIr9lg42x+fTPT1LcONb3y4K/FXpINcEovMex1jFfPZLdo1V+I+JYyEHZzNQZxQ+lqFsV6LNsqLhtI+RT1tvkDm1bq4kEfT84BhILs0Gm7eLIx+8LCEI08PluKbYFlK/mRMlqHp2ShYh+KWSxVp98kgJqcqFQcI="
   ]
 }
+
 ```
 
 
@@ -150,7 +161,7 @@ Reponse example: return the smart contracts addresses
 ```json
 {
   "exm_function_id": {
-    "addr": "wyfTGnKv6uAE3epxc2kYFum-9b9WDbiEgujiheO6G2M",
+    "addr": "FUsocdnUnwXRLoQGd1gvGwp0oUmNzqLbkuVG0zC-nwc",
     "network": "arweave-mainnet"
   },
   "eth_oracle_addr": {
