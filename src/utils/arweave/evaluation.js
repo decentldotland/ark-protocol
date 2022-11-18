@@ -40,11 +40,11 @@ export async function checkAndVerifyUser(userObject) {
           address.verification_req,
           address.network
         );
-        if (!EVM_ORACLES_CONTRACTS.includes(evmVerificationReq.to)) {
+        if (!EVM_ORACLES_CONTRACTS.includes(evmVerificationReq?.to)) {
           await writeEvaluation(public_key, arweave_address, address.address, false, address.network);
         }
 
-        const hashedArAddressLog = evmVerificationReq.logs[0].topics[2];
+        const hashedArAddressLog = evmVerificationReq?.logs[0]?.topics[2];
 
         const resolvedArweaveAddr = await ownerToAddress(public_key);
         const validity = await checkTopicAgainstAddress(
