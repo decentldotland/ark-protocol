@@ -40,6 +40,7 @@ export async function getTransaction(txid, network) {
     return tx;
   } catch (error) {
     console.log(error);
+    return false;
   }
 }
 
