@@ -69,7 +69,7 @@ export async function checkAndVerifyUser(userObject) {
       if (exmNetKey === "EXOTIC") {
         // NEAR-MAINNET is the only exotic network as per now
         const isVerifiable = await canBeVerifiedNear({
-          arweave_address: arweave_address,
+          arweave_address: resolvedArweaveAddr,
           verificationReq: address.verification_req,
           exotic_address: address.address,
           public_key: public_key
