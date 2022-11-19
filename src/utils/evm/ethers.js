@@ -138,6 +138,10 @@ export async function resolveNetworkKey(network_key) {
         ABI: ArkNetworkVyper,
         EXM_KEY: "EVM",
       };
+    case "NEAR-MAINNET":
+      return {
+        EXM_KEY: "EXOTIC",
+      };
     default:
       return {
         RPC_URL: GOERLI_ETH_RPC,
