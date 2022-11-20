@@ -6,6 +6,7 @@ import {
   EVMOS_MAINNET_RPC,
   URBIT_ID_CONTRACT,
   LENS_LPP_CONTRACT,
+  BYZANTION_QUERY,
 } from "./constants.js";
 import { getUserRegistrationTimestamp } from "./arweave/graphql.js";
 import { getAddrCheckSum } from "./evm/web3.js";
@@ -48,8 +49,10 @@ export async function getArkProfile(network, address) {
 
     userProfile.ARWEAVE = {};
     userProfile.EVM = {};
+    userProfile.EXOTIC = {};
 
     const verifiedEvmAddresses = userProfile.addresses.filter((addr) => !!addr.is_verified && addr.ark_key === "EVM");
+    const verifiedExoticAddresses = userProfile.addresses.filter((addr) => !!addr.is_verified && addr.ark_key === "EXOTIC" && addr.network === "NEAR-MAINNET");
 
     const koiiNfts = await getKoiiNfts(userProfile.arweave_address);
     const permapagesNfts = await getPermaPagesNfts(userProfile.arweave_address);
@@ -68,7 +71,6 @@ export async function getArkProfile(network, address) {
 
     for (const address of verifiedEvmAddresses) {
       const addr = await getAddrCheckSum(address.address);
-      console.log(`\n\n\n ADDR: ${addr}`)
       userProfile.EVM[addr] = {}
       const addressMetadata = userProfile.EVM[addr];
 
@@ -92,6 +94,14 @@ export async function getArkProfile(network, address) {
       addressMetadata.RSS3 = await getRss3Profile(addr);
       addressMetadata.GALAXY_CREDS = await getGalaxyCreds(addr);
       addressMetadata.CROSSBELL_HANDLES = await getCrossbellsOf(addr);
+    }
+
+    for (const address of verifiedExoticAddresses) {
+      const addr = address.address
+      userProfile.EXOTIC[addr] = {};
+      const addressMetadata = userProfile.EXOTIC[addr];
+
+      userProfile.NFTS = await getNearNfts(addr);
     }
 
     // await retrievNearTransaction(userProfile);
@@ -493,4 +503,50 @@ async function getGalaxyCreds(address) {
   } catch (error) {
     return null;
   }
+}
+
+async function makeByzantionQuery(operationsDoc, operationName, variables) {
+  const result = await fetch("https://byz-graphql-02.hasura.app/v1/graphql", {
+    method: "POST",
+    headers: {
+      "x-api-key": process.env.BYZANTION_API_KEY,
+    },
+    body: JSON.stringify({
+      query: operationsDoc,
+      variables: variables,
+      operationName: operationName,
+    }),
+  });
+
+  return await result.json();
+}
+
+function fetchNearNfts(where, limit, offset) {
+  return makeByzantionQuery(BYZANTION_QUERY, "GET_OWNED_NFTS", {
+    where: where,
+    limit: limit,
+    offset: offset,
+  });
+}
+
+async function getNearNfts(address) {
+  const { errors, data } = await fetchNearNfts(
+    {
+      nft_states: { owner: { _eq: address } },
+    },
+    50,
+    0
+  );
+
+  if (errors) {
+    console.log(errors);
+    return [];
+  }
+
+  for (const nft of data?.nft_meta) {
+    delete nft?.nft_states;
+    delete nft?.bid_state_nft_meta;
+  }
+
+  return data?.nft_meta;
 }
