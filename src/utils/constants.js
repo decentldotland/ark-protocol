@@ -58,4 +58,48 @@ export const SERVER_ETH_RPC = `https://cloudflare-eth.com`;
 export const URBIT_ID_CONTRACT = `0x33eecbf908478c10614626a9d304bfe18b78dd73`;
 export const LENS_LPP_CONTRACT = `0xdb46d1dc155634fbc732f92e853b10b288ad5a1d`;
 
-
+// GraphQL
+export const BYZANTION_QUERY = `
+  query GET_OWNED_NFTS($where: nft_meta_bool_exp!, $limit: Int!, $offset: Int!, $order_by: [nft_meta_order_by!]) {
+    nft_meta(where: $where, limit: $limit, offset: $offset, order_by: $order_by) {
+      id
+      token_id
+      name
+      image
+      ranking
+      rarity
+      collection {
+        title
+        slug
+      }
+      nft_states {
+        nft_state_lists(
+          where: {listed: {_eq: true}}
+          order_by: {list_price: asc}
+          limit: 1
+        ) {
+          list_price
+          list_price_str
+          list_seller
+          listed
+          updated_at
+          list_block_datetime
+          function_args
+          list_contract {
+            contract_key
+            name
+          }
+        }
+      }
+      bid_state_nft_meta(where: {bid_state: {status: {_eq: "active"}}}) {
+        bid_state {
+          bid_buyer
+          bid_price
+          bid_price_str
+          bid_seller
+          bid_type
+        }
+      }
+    }
+  }
+`;
