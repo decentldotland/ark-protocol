@@ -73,6 +73,7 @@ export async function getArkProfile(network, address) {
       const addressMetadata = userProfile.EVM[addr];
 
       const ercNfts = await getMoralisNfts(addr);
+      const evmosNfts = await getEvmosNfts(addr);
 
       addressMetadata.ENS = await getEnsProfile(addr);
       addressMetadata.AVVY = await getAvvyProfile(addr);
@@ -83,6 +84,7 @@ export async function getArkProfile(network, address) {
       addressMetadata.GITPOAPS = await getGitPoaps(addr);
       addressMetadata.POAPS = await getAllPoaps(addr);
       addressMetadata.ERC_NFTS = ercNfts;
+      addressMetadata.EVMOS_NFTS = evmosNfts;
       addressMetadata.URBIT_IDS = ercNfts.filter(
           (nft) => nft.token_address == URBIT_ID_CONTRACT
         );
@@ -242,6 +244,40 @@ async function getEvmosProfile(evm_address) {
 async function getKoiiNfts(arweave_address) {
   try {
     const nfts = await getWeaveAggregator("koii", arweave_address);
+    return nfts;
+  } catch (error) {
+    return [];
+  }
+}
+
+async function getEvmosNfts(evm_address) {
+  try {
+    const req = (
+      await axios.get(
+        `https://api.covalenthq.com/v1/9001/address/${evm_address}/balances_v2/?quote-currency=USD&format=JSON&nft=true&no-nft-fetch=false&key=${process.env.COVALENT_API_KEY}`
+      )
+    )?.data;
+    const nfts = req?.data?.items?.filter((item) => item.type === "nft");
+
+    for (const nft of nfts) {
+      const keepKeys = [
+        "contract_decimals",
+        "nft_data",
+        "contract_name",
+        "contract_ticker_symbol",
+        "contract_address",
+      ];
+      for (const key of Object.keys(nft)) {
+        !keepKeys.includes(key) ? delete nft[key] : void 0;
+      }
+      nft.token_id = nft?.nft_data?.[0]?.token_id;
+      nft.balance = nft?.nft_data?.[0]?.token_balance;
+      nft.name = nft?.nft_data?.[0]?.external_data?.name;
+      nft.description = nft?.nft_data?.[0]?.external_data?.description;
+      nft.image = nft?.nft_data?.[0]?.external_data?.image_512;
+
+      delete nft?.nft_data;
+    }
     return nfts;
   } catch (error) {
     return [];
@@ -409,7 +445,7 @@ async function getLinageeDomains(address) {
         format: "decimal",
         token_addresses: "0x2cc8342d7c8bff5a213eb2cde39de9a59b3461a7",
       },
-      headers: { accept: "application/json", "X-API-Key": "test" },
+      headers: { accept: "application/json", "X-API-Key": process.env.MORALIS_API_KEY },
     };
 
     const res = await axios.request(options);
