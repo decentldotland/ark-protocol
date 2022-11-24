@@ -217,8 +217,13 @@ Reponse example: return the smart contracts addresses
 ```
 
 #### To get the active Arweave-EXM oracle contract, always use the `exm_function_id` from `/v2/protocol/addresses`
+### 4- Resolve Ark addresses for a given address
 
-### 4- get Ark profile metadata
+- `GET /v2/address/resolve/:address`
+
+`address` can be of any type (Arweave, EVM or Exotic). the API will return addresses and linkage requests data for the given address.
+
+### 5- get Ark profile full metadata
 - `GET /v2/profile/:network/:address/:compress?`
 
 `network` can be either `arweave` or `evm` - and thus `address` should be on the equivalent network.
