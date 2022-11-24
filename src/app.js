@@ -5,6 +5,7 @@ import {
   getStats,
   getNetworkAddresses,
 } from "./utils/cache-utils.js";
+import { resolveAddress } from "./utils/endpoints/resolving.js";
 import { runPolling } from "./utils/polling.js";
 import { getArkProfile } from "./utils/server-utils.js";
 import express from "express";
@@ -47,6 +48,14 @@ app.get("/v2/protocol/addresses", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
   const addresses = await getNetworkAddresses();
   res.send(addresses);
+});
+
+app.get("/v2/address/resolve/:address", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  const identity = await resolveAddress(req.params?.address);
+  const jsonRes = JSON.parse(base64url.decode(identity));
+  res.send(jsonRes);
+  return;
 });
 
 app.get("/v2/profile/:network/:address/:compress?", async (req, res) => {
