@@ -342,8 +342,9 @@ async function getGitPoaps(evm_address) {
 }
 
 async function retrieveArtransactions(arweave_address) {
-  const q = {
-    query: `query {
+  try {
+    const q = {
+      query: `query {
   transactions(
   owners: ["${arweave_address}"],
     first: 25
@@ -359,26 +360,30 @@ async function retrieveArtransactions(arweave_address) {
     }
   }
 }`,
-  };
-  const response = await axios.post("https://arweave.net/graphql", q, {
-    headers: { "Content-Type": "application/json" },
-  });
-
-  const transactions = [];
-
-  const res_arr = response.data.data.transactions.edges;
-
-  for (let element of res_arr) {
-    const tx = element["node"];
-    transactions.push({
-      txid: tx.id,
-      // pending transactions do not have block value
-      timestamp: tx.block ? tx.block.timestamp : Date.now(),
-      tags: tx.tags ? tx.tags : [],
+    };
+    const response = await axios.post("https://arweave.net/graphql", q, {
+      headers: { "Content-Type": "application/json" },
     });
+
+    const transactions = [];
+
+    const res_arr = response.data.data.transactions.edges;
+
+    for (let element of res_arr) {
+      const tx = element["node"];
+      transactions.push({
+        txid: tx.id,
+        // pending transactions do not have block value
+        timestamp: tx.block ? tx.block.timestamp : Date.now(),
+        tags: tx.tags ? tx.tags : [],
+      });
+    }
+    return transactions;
+  } catch (error) {
+    return [];
   }
-  return transactions;
 }
+
 
 async function retrievNearTransaction(userProfile) {
   try {
