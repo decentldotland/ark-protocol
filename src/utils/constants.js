@@ -2,7 +2,8 @@ import "./setEnv.js";
 
 export const ARWEAVE_ORACLE_ADDRESS = `5H5Hj81G5j5P2raDhe5VFU-zkf08KDc588GJ8dtlHTw`; // v0.0.9 (exotic hybrid)
 // export const EXM_ARK_CONTRACT = `wyfTGnKv6uAE3epxc2kYFum-9b9WDbiEgujiheO6G2M`;
-export const EXM_ARK_CONTRACT = `FUsocdnUnwXRLoQGd1gvGwp0oUmNzqLbkuVG0zC-nwc`
+// export const EXM_ARK_CONTRACT = `FUsocdnUnwXRLoQGd1gvGwp0oUmNzqLbkuVG0zC-nwc`
+export const EXM_ARK_CONTRACT = `Z7JzRRt2iTQWV5LziNhTV6SP51tVKkCf_qrUqtlwzpg`;
 // EVM ADDRESSES
 export const ETH_ORACLE_ADDRESS = `0xdE44d3fB118E0f007f2C0D8fFFE98b994383949A`; // Goerli Testnet && ETH Mainnet
 export const AURORA_TESTNET_ADDRESS = `0xfb0200C27185185D7DEe0403D5f102ADb59B7c34`;
