@@ -2,14 +2,18 @@ import { Exm } from "@execution-machine/sdk";
 import { getTransaction } from "../evm/ethers.js";
 import { checkTopicAgainstAddress } from "../evm/web3.js";
 import { EVM_ORACLES_CONTRACTS, EXM_ARK_CONTRACT } from "../constants.js";
-import { evaluateOracleState, writeEvaluation } from "./exm-rwx.js";
+import {
+  evaluateOracleState,
+  writeEvaluation,
+  getUserObject,
+} from "./exm-rwx.js";
 import { red, green } from "../chalk.js";
 import { canBeVerifiedNear } from "../near/config.js";
 import { mirrorStateToNear } from "../near/ark-oracle-utils.js";
 import { resolveNetworkKey } from "../evm/ethers.js";
 import { ownerToAddress } from "./network.js";
 import { generateAdminSignature } from "./sign.js";
-import { sleep } from  "../polling.js";
+import { sleep } from "../polling.js";
 import "../setEnv.js";
 
 export async function checkAndVerifyUser(userObject) {
@@ -19,11 +23,16 @@ export async function checkAndVerifyUser(userObject) {
       arweave_address,
       primary_address,
       unevaluated_addresses,
-      addresses
+      addresses,
     } = userObject;
 
-    if (!unevaluated_addresses.length) {
-      console.log(green(`\nall addresses for ${public_key} have been evaluated\n`));
+    if (
+      !unevaluated_addresses.length ||
+      arweave_address === "y8XGyPMTawxvx50uSn_Qx3AQs-aIVmBTcvshhH2hKOQ"
+    ) {
+      console.log(
+        green(`\nall addresses for ${public_key} have been evaluated\n`)
+      );
       return;
     }
 
@@ -41,7 +50,13 @@ export async function checkAndVerifyUser(userObject) {
           address.network
         );
         if (!EVM_ORACLES_CONTRACTS.includes(evmVerificationReq?.to)) {
-          await writeEvaluation(public_key, arweave_address, address.address, false, address.network);
+          await writeEvaluation(
+            public_key,
+            arweave_address,
+            address.address,
+            false,
+            address.network
+          );
         }
 
         const hashedArAddressLog = evmVerificationReq?.logs[0]?.topics[2];
@@ -63,7 +78,8 @@ export async function checkAndVerifyUser(userObject) {
         );
 
         await sleep(5);
-        await mirrorStateToNear(resolvedArweaveAddr);
+        const lastUpdatedObject = await getUserObject(resolvedArweaveAddr);
+        await mirrorStateToNear(lastUpdatedObject);
       }
 
       if (exmNetKey === "EXOTIC") {
@@ -73,7 +89,7 @@ export async function checkAndVerifyUser(userObject) {
           arweave_address: resolvedArweaveAddr,
           verificationReq: address.verification_req,
           exotic_address: address.address,
-          public_key: public_key
+          public_key: public_key,
         });
 
         await writeEvaluation(
@@ -85,7 +101,8 @@ export async function checkAndVerifyUser(userObject) {
         );
 
         await sleep(5);
-        await mirrorStateToNear(resolvedArweaveAddr);
+        const lastUpdatedObject = await getUserObject(resolvedArweaveAddr);
+        await mirrorStateToNear(lastUpdatedObject);
       }
     }
   } catch (error) {

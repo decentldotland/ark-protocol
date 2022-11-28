@@ -22,7 +22,6 @@ export async function getAdminMessage() {
   try {
     const state = await evaluateOracleState();
     const messages = state.admin_sig_messages;
-    console.log(messages)
     return messages[messages.length - 1];
   } catch(error) {
     return false;
@@ -41,6 +40,7 @@ export async function writeEvaluation(
     if (!arweave_address) {
       arweave_address = await ownerToAddress(user_pubkey)
     }
+
     const inputs = [{ function: "evaluate", arweave_address: arweave_address, evaluated_address: evaluated_address, evaluation: evaluation, admin_jwk_n: ADMIN_JWK_N , admin_sig: adminSignature, user_pubkey: user_pubkey }];
     const interaction = await exmInstance.functions.write(
       EXM_ARK_CONTRACT,
@@ -95,3 +95,17 @@ async function logEvalResult(
     );
   }
 }
+
+export async function getUserObject(arweave_address) {
+  try {
+    const user = (await evaluateOracleState())?.identities?.find(
+      (usr) => usr.arweave_address === arweave_address
+    );
+    return user ? user : {};
+  } catch (error) {
+    console.log(error);
+    return {};
+  }
+}
+
+

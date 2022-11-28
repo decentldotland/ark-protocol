@@ -515,6 +515,7 @@ async function makeByzantionQuery(operationsDoc, operationName, variables) {
     method: "POST",
     headers: {
       "x-api-key": process.env.BYZANTION_API_KEY,
+      "Hasura-Client-Name": "decent.land",
     },
     body: JSON.stringify({
       query: operationsDoc,
