@@ -63,7 +63,7 @@ Check these [docs](./ark-contracts/docs/exm-ark-guide.md) to learn how to interg
 
 | Contract  | Source Code | Deployment | Network |
 | ------------- |:-------------:| :-------------: | :-------------: |
-| Ark EXM Oracle | [ark-contracts/arweave](./ark-contracts/arweave/exm-ark.js) | [FUsocdnUnwXRLoQGd1gvGwp0oUmNzqLbkuVG0zC-nwc](https://api.exm.dev/read/FUsocdnUnwXRLoQGd1gvGwp0oUmNzqLbkuVG0zC-nwc) | Arweave-EXM |
+| Ark EXM Oracle | [ark-contracts/arweave](./ark-contracts/arweave/exm-ark.js) | [Z7JzRRt2iTQWV5LziNhTV6SP51tVKkCf_qrUqtlwzpg](https://api.exm.dev/read/Z7JzRRt2iTQWV5LziNhTV6SP51tVKkCf_qrUqtlwzpg) | Arweave-EXM |
 | Ethereum Registry SC      | [ark-contracts/EVM](./ark-contracts/EVM/identity.vy)     | 0xdE44d3fB118E0f007f2C0D8fFFE98b994383949A | [Goerli](https://goerli.etherscan.io/address/0xde44d3fb118e0f007f2c0d8fffe98b994383949a) \|\| [Mainnet](https://etherscan.io/address/0xde44d3fb118e0f007f2c0d8fffe98b994383949a) |
 | Aurora Registry SC      | [ark-contracts/EVM](./ark-contracts/EVM/identity.vy)     |  [0xfb0200C27185185D7DEe0403D5f102ADb59B7c34](https://testnet.aurorascan.dev/address/0xfb0200c27185185d7dee0403d5f102adb59b7c34)          | Aurora Testnet |
 | BSC Testnet Registry SC      | [ark-contracts/EVM](./ark-contracts/EVM/identity.vy)     |  [0x90f36C4Fc09a2AD3B62Cc6F5f2BCC769aFAcB70d](https://testnet.bscscan.com/address/0x90f36c4fc09a2ad3b62cc6f5f2bcc769afacb70d)          |  Testnet  |
@@ -161,7 +161,7 @@ Reponse example: return the smart contracts addresses
 ```json
 {
   "exm_function_id": {
-    "addr": "FUsocdnUnwXRLoQGd1gvGwp0oUmNzqLbkuVG0zC-nwc",
+    "addr": "Z7JzRRt2iTQWV5LziNhTV6SP51tVKkCf_qrUqtlwzpg",
     "network": "arweave-mainnet"
   },
   "eth_oracle_addr": {
