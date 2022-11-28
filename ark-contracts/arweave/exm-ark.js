@@ -10,7 +10,7 @@
  *         ╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚═╝        ╚═╝░░╚══╝╚══════╝░░░╚═╝░░░░░░╚═╝░░░╚═╝░░░╚════╝░╚═╝░░╚═╝╚═╝░░╚═╝
  *
  * @title Ark Network Arweave oracle
- * @version EXM@v0.0.7
+ * @version EXM@v0.0.8
  * @author charmful0x
  * @license MIT
  * @website decent.land
@@ -337,8 +337,6 @@ export async function handle(state, action) {
     );
     ContractAssert(evaluatedAddrIndex >= 0, ERROR_ADDRESS_NOT_OWNED);
 
-    _checkSignature(user.addresses[evaluatedAddrIndex].verification_req);
-
     ContractAssert(
       user.unevaluated_addresses.includes(evaluated_address),
       ERROR_ADDRESS_ALREADY_EVALUATED
@@ -517,7 +515,8 @@ export async function handle(state, action) {
       _validateEvmTx(signature);
     }
 
-    // exotic networks are not checked
+    // exotic networks are not checked syntactically
+    ContractAssert(typeof signature === "string" && signature.length, ERROR_INVALID_DATA_TYPE)
   }
 
   function _validateEvmAddress(address) {
