@@ -26,10 +26,7 @@ export async function checkAndVerifyUser(userObject) {
       addresses,
     } = userObject;
 
-    if (
-      !unevaluated_addresses.length ||
-      arweave_address === "y8XGyPMTawxvx50uSn_Qx3AQs-aIVmBTcvshhH2hKOQ"
-    ) {
+    if (!unevaluated_addresses.length) {
       console.log(
         green(`\nall addresses for ${public_key} have been evaluated\n`)
       );
