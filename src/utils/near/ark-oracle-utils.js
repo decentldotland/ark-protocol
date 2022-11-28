@@ -19,10 +19,9 @@ async function tesnetNetConfig() {
   };
 }
 
-export async function mirrorStateToNear(ar_addr) {
+export async function mirrorStateToNear(userObject) {
   try {
     const currentNearState = await readNearOracleState();
-    const userObject = await getUserObject(ar_addr);
 
     const identityExistence = currentNearState.findIndex(
       (identity) => identity.arweave_address === userObject?.arweave_address
@@ -83,6 +82,7 @@ async function updateUserIndentityNear(newIdentity) {
   await contract.update_ark_user_identity({
     meta: "update identity",
     args: { updatedIdentity: newIdentity },
+    gas: "300000000000000",
   });
 }
 
@@ -102,17 +102,6 @@ async function addUserIndentityNear(newIdentity) {
   await contract.append_user_identity({
     meta: "append identity",
     args: { identity: newIdentity },
+    gas: "300000000000000",
   });
-}
-
-// UTILS
-async function getUserObject(arweave_address) {
-  try {
-    const arkState = (await evaluateOracleState())?.identities;
-    const identity = arkState.find((id) => (id.arweave_address === arweave_address) && id.is_verified);
-
-    return identity;
-  } catch (error) {
-    console.log(error);
-  }
 }
