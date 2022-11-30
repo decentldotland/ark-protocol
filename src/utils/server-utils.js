@@ -29,7 +29,7 @@ export async function getArkProfile(network, address) {
       return "e30";
     }
 
-    if (!["arweave", "evm"].includes(network)) {
+    if (!["arweave", "evm", "exotic"].includes(network)) {
       return "e30";
     }
 
