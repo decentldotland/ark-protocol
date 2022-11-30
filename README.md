@@ -226,7 +226,7 @@ Reponse example: return the smart contracts addresses
 ### 5- get Ark profile full metadata
 - `GET /v2/profile/:network/:address/:compress?`
 
-`network` can be either `arweave` or `evm` - and thus `address` should be on the equivalent network.
+`network` can be either `arweave`, `evm` or `exotic` - and thus `address` should be on the equivalent network. For `evm` and `exotic` , only a verified identity having its `primary_address` equivalent to that address is returned.
 
 Response: return user's Ark identity multichain metadata.
 
