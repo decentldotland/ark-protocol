@@ -114,7 +114,7 @@ export async function getArkProfile(network, address) {
 }
 
 // helper functions
-async function getAnsProfile(arweave_address) {
+export async function getAnsProfile(arweave_address) {
   try {
     const domains = (await axios.get(ANS_CACHE_API))?.data;
     if (!domains) {
@@ -130,7 +130,7 @@ async function getAnsProfile(arweave_address) {
   }
 }
 
-async function getEnsProfile(eth_address) {
+export async function getEnsProfile(eth_address) {
   try {
     const provider = new ethers.providers.JsonRpcProvider(SERVER_ETH_RPC);
     const domain = await provider.lookupAddress(eth_address);
@@ -176,7 +176,7 @@ async function getRss3Profile(eth_address) {
   }
 }
 
-async function getCrossbellsOf(evm_address) {
+export async function getCrossbellsOf(evm_address) {
   try {
     const res = [];
     const indexer = new Indexer();
@@ -218,7 +218,7 @@ async function getLensProtocolsActv(eth_address) {
 }
 
 
-async function getAvvyProfile(evm_address) {
+export async function getAvvyProfile(evm_address) {
   try {
     const provider = new ethers.providers.JsonRpcProvider(
       AVALANCHE_MAINNET_RPC
@@ -233,7 +233,7 @@ async function getAvvyProfile(evm_address) {
   }
 }
 
-async function getEvmosProfile(evm_address) {
+export async function getEvmosProfile(evm_address) {
   try {
     const provider = new ethers.providers.JsonRpcProvider(
       EVMOS_MAINNET_RPC
@@ -260,7 +260,7 @@ async function getKoiiNfts(arweave_address) {
   }
 }
 
-async function getEvmosNfts(evm_address) {
+export async function getEvmosNfts(evm_address) {
   try {
     const req = (
       await axios.get(
@@ -312,7 +312,7 @@ async function getPermaPagesStamps(arweave_address) {
   }
 }
 
-async function getAllPoaps(evm_address) {
+export async function getAllPoaps(evm_address) {
   try {
     const API_KEY = process.env.POAP_API_KEY;
     const res = await axios.get(
@@ -403,7 +403,7 @@ async function retrievNearTransaction(userProfile) {
   }
 }
 
-async function getMoralisNfts(evm_address) {
+export async function getMoralisNfts(evm_address) {
   try {
     const res = (
       await axios.get(
@@ -423,7 +423,7 @@ async function getMoralisNfts(evm_address) {
   }
 }
 
-async function getLensHandles(evm_address) {
+export async function getLensHandles(evm_address) {
   try {
     const res = (
       await axios.get(
@@ -481,7 +481,7 @@ async function getLinageeDomains(address) {
 }
 
 
-async function getGalaxyCreds(address) {
+export async function getGalaxyCreds(address) {
   try {
     const q = {
       query: `query userCredentials {
@@ -535,7 +535,7 @@ function fetchNearNfts(where, limit, offset) {
   });
 }
 
-async function getNearNfts(address) {
+export async function getNearNfts(address) {
   const { errors, data } = await fetchNearNfts(
     {
       nft_states: { owner: { _eq: address } },
