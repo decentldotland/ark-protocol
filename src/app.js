@@ -9,6 +9,7 @@ import { resolveAddress } from "./utils/endpoints/resolving.js";
 import { runPolling } from "./utils/polling.js";
 import { getArkProfile } from "./utils/server-utils.js";
 import { getSoArkData } from "./utils/endpoints/soArk.js";
+import { getNearNfts } from "./utils/server-utils.js";
 import express from "express";
 import base64url from "base64url";
 import cors from "cors";
@@ -67,6 +68,20 @@ app.get("/v2/soark/:network/:address", async (req, res) => {
   res.send(jsonRes);
   return;
 });
+
+app.get("/v2/nep/:address", async (req, res) => {
+  try {
+    res.setHeader("Content-Type", "application/json");
+    const response = await getNearNfts(req.params?.address);
+    res.send({ result: response });
+    return;
+  } catch (error) {
+    console.log(error);
+    res.send({ result: null });
+    return;
+  }
+});
+
 
 app.get("/v2/profile/:network/:address/:compress?", async (req, res) => {
   const profile = await getArkProfile(req.params.network, req.params.address);
