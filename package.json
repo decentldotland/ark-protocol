@@ -1,6 +1,6 @@
 {
   "name": "ark-protocol",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "type": "module",
   "description": "Verifiable multichain identities",
   "main": "./src/app.js",
