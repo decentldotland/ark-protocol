@@ -56,10 +56,12 @@ export async function getArkProfile(network, address) {
 
     const koiiNfts = await getKoiiNfts(userProfile.arweave_address);
     const permapagesNfts = await getPermaPagesNfts(userProfile.arweave_address);
+    const arnsDomain = await getArns(userProfile.arweave_address);
     
     // ARWEAVE METADATA
     userProfile.ARWEAVE.ANS = await getAnsProfile(userProfile.arweave_address);
     userProfile.ARWEAVE.IS_VOUCHED = await isVouched(userProfile.arweave_address);
+    userProfile.ARWEAVE.ARNS = arnsDomain ? `${arnsDomain}.arweave.dev` : false;
     userProfile.ARWEAVE.ANFTS =
       koiiNfts.length > 0 || permapagesNfts.length > 0
         ? { koii: koiiNfts, permapages_img: permapagesNfts }
@@ -248,6 +250,15 @@ export async function getEvmosProfile(evm_address) {
   } catch (error) {
     console.log(error);
     return false;
+  }
+}
+
+async function getArns(arweave_address) {
+  try {
+    const domain = await getWeaveAggregator("arns", arweave_address);
+    return domain;
+  } catch (error) {
+    return null;
   }
 }
 
