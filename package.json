@@ -1,6 +1,6 @@
 {
   "name": "ark-protocol",
-  "version": "0.6.5",
+  "version": "0.6.6",
   "type": "module",
   "description": "Verifiable multichain identities",
   "main": "./src/app.js",
@@ -42,7 +42,7 @@
     "node-gzip": "^1.1.2",
     "sha256": "^0.2.0",
     "vouchdao": "^0.2.2",
-    "weave-aggregator": "^0.4.3",
+    "weave-aggregator": "^0.4.5",
     "web3": "^1.7.3"
   }
 }
