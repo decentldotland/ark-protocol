@@ -10,6 +10,7 @@ import { runPolling } from "./utils/polling.js";
 import { getArkProfile } from "./utils/server-utils.js";
 import { getSoArkData } from "./utils/endpoints/soArk.js";
 import { getNearNfts } from "./utils/server-utils.js";
+import { getDomainsOf } from "./utils/endpoints/domains.js";
 import express from "express";
 import base64url from "base64url";
 import cors from "cors";
@@ -64,6 +65,15 @@ app.get("/v2/soark/:network/:address", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
   const { network, address } = req.params;
   const response = await getSoArkData(network, address);
+  const jsonRes = JSON.parse(base64url.decode(response));
+  res.send(jsonRes);
+  return;
+});
+
+app.get("/v2/domains/:network/:address", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  const { network, address } = req.params;
+  const response = await getDomainsOf(network, address);
   const jsonRes = JSON.parse(base64url.decode(response));
   res.send(jsonRes);
   return;
