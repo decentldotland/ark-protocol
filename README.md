@@ -230,6 +230,27 @@ Reponse example: return the smart contracts addresses
 
 Response: return user's Ark identity multichain metadata.
 
+### 6- SoArk: `soark` endpoint
+
+- `GET /v2/soark/:network/:address`
+
+Response: return user's Domain Names (NS) and NFTs
+
+### 7- SoArk: Only Domains
+- `GET /v2/domains/:network/:address` 
+
+Response: return all domains owned by any verified address linked with the given identity reference (address).
+
+### 8- SoArk: Only NFTs
+- `GET /v2/allnft/:network/:address`
+
+Reponse: return EVM & NEAR NFTs owned by any verified address linked with the given identity reference (address).
+
+### 9- soArk: Only NEAR NFTs
+- `GET /v2/nep/:address`
+
+Response: return NFTs for a given NEAR address
+
 #### N.B `compress` (bool) is a parameter that if seeded, gzip the API's response 
 
 ## License
