@@ -5,6 +5,7 @@ export async function handle(state, action) {
   const message = state.message;
   const signatures = state.signatures;
   const sol_molecule_endpoint = state.sol_molecule_endpoint;
+  let message_counter = state.message_counter;
 
   const ERROR_MISSING_REQUIRED_ARGUMENTS = `ERROR_FUNCTION_MISSING_NECESSARY_ARGUMENTS`;
   const ERROR_INVALID_ARWEAVE_ADDRESS = `ERROR_INVALID_ARWEAVE_ADDRESS_SYNTAX`;
@@ -42,10 +43,11 @@ export async function handle(state, action) {
     try {
       ContractAssert(!signatures.includes(signature));
       const isValid = await EXM.deterministicFetch(
-        `${sol_molecule_endpoint}/auth/${caller}/${btoa(message)}/${signature}`
+        `${sol_molecule_endpoint}/auth/${caller}/${btoa(message + message_counter)}/${signature}`
       );
       ContractAssert(isValid.asJSON()?.result, ERROR_INVALID_CALLER);
       signatures.push(signature);
+      state.message_counter += 1;
     } catch (error) {
       throw new ContractError(ERROR_MOLECULE_CONNECTION);
     }
