@@ -1,6 +1,7 @@
 {
   "identities": [],
-  "message": "hello world",
+  "message": "ark linking req",
+  "message_counter": 0,
   "sol_molecule_endpoint": "http://sol.molecule.sh",
   "signatures": []
 }
