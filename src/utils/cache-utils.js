@@ -14,6 +14,7 @@ import {
   NEAR_MAINNET_ADDRESS,
   EVMOS_MAINNET_ADDRESS,
   NEAR_TESTNET_ARK_ORACLE,
+  SOLANA_BETA_REGISTRY,
 } from "./constants.js";
 import { evaluateOracleState } from "./arweave/exm-rwx.js";
 import base64url from "base64url";
@@ -26,7 +27,6 @@ export async function getOracleState() {
       return base64url(`{}`);
     }
     const res = base64url(JSON.stringify({ res: state.identities }));
-    console.log(res)
 
     return res;
   } catch (error) {
@@ -56,9 +56,9 @@ export async function getNetworkAddresses() {
     const state = await evaluateOracleState();
 
     return {
-      exm_function_id: {
+      master_oracle: {
         addr: EXM_ARK_CONTRACT,
-        network: "arweave-mainnet",
+        network: "exm-mainnet",
       },
       eth_oracle_addr: {
         addr: ETH_ORACLE_ADDRESS,
@@ -104,6 +104,10 @@ export async function getNetworkAddresses() {
         addr: NEAR_TESTNET_ARK_ORACLE,
         network: "near-testnet",
       },
+      solana_oracle_address: {
+        addr: SOLANA_BETA_REGISTRY,
+        network: "exm-mainnet",
+      },
       neon_devnet_oracle_addr: {
         addr: NEON_DEVNET_ADDRESS,
         network: "neon-devnet",
@@ -113,3 +117,4 @@ export async function getNetworkAddresses() {
     console.log(error);
   }
 }
+
