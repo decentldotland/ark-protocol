@@ -161,9 +161,9 @@ Reponse example: return the smart contracts addresses
 
 ```json
 {
-  "exm_function_id": {
+  "master_oracle": {
     "addr": "Z7JzRRt2iTQWV5LziNhTV6SP51tVKkCf_qrUqtlwzpg",
-    "network": "arweave-mainnet"
+    "network": "exm-mainnet"
   },
   "eth_oracle_addr": {
     "addr": "0xdE44d3fB118E0f007f2C0D8fFFE98b994383949A",
@@ -209,6 +209,10 @@ Reponse example: return the smart contracts addresses
     "addr": "dev-1660516310576-97373428914255",
     "network": "near-testnet"
   },
+  "solana_oracle_address": {
+    "addr": "Wg_78ViU6IkxpKnAJGMpGlXd7u_QmCsHIo3kFGKek8M",
+    "network": "exm-mainnet"
+  },
   "neon_devnet_oracle_addr": {
     "addr": "0xdE44d3fB118E0f007f2C0D8fFFE98b994383949A",
     "network": "neon-devnet"
@@ -217,7 +221,7 @@ Reponse example: return the smart contracts addresses
 
 ```
 
-#### To get the active Arweave-EXM oracle contract, always use the `exm_function_id` from `/v2/protocol/addresses`
+#### To get the active Arweave-EXM oracle contract, always use the `master_oracle` from `/v2/protocol/addresses`
 ### 4- Resolve Ark addresses for a given address
 
 - `GET /v2/address/resolve/:address`
