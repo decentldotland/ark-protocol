@@ -13,6 +13,7 @@ import { mirrorStateToNear } from "../near/ark-oracle-utils.js";
 import { resolveNetworkKey } from "../evm/ethers.js";
 import { ownerToAddress } from "./network.js";
 import { generateAdminSignature } from "./sign.js";
+import { verifyBetaExotic } from "../beta-exotic/verify.js";
 import { sleep } from "../polling.js";
 import "../setEnv.js";
 
@@ -26,7 +27,9 @@ export async function checkAndVerifyUser(userObject) {
       addresses,
     } = userObject;
 
-    if (!unevaluated_addresses.length) {
+    if (
+      !unevaluated_addresses.length
+    ) {
       console.log(
         green(`\nall addresses for ${public_key} have been evaluated\n`)
       );
@@ -79,14 +82,35 @@ export async function checkAndVerifyUser(userObject) {
         await mirrorStateToNear(lastUpdatedObject);
       }
 
-      if (exmNetKey === "EXOTIC") {
+      if (exmNetKey === "EXOTIC-NEAR") {
         const resolvedArweaveAddr = await ownerToAddress(public_key);
-        // NEAR-MAINNET is the only exotic network as per now
         const isVerifiable = await canBeVerifiedNear({
           arweave_address: resolvedArweaveAddr,
           verificationReq: address.verification_req,
           exotic_address: address.address,
           public_key: public_key,
+        });
+
+        await writeEvaluation(
+          public_key,
+          arweave_address,
+          address.address,
+          isVerifiable,
+          address.network
+        );
+
+        await sleep(5);
+        const lastUpdatedObject = await getUserObject(resolvedArweaveAddr);
+        await mirrorStateToNear(lastUpdatedObject);
+      }
+
+      if (exmNetKey === "EXOTIC-SOLANA") {
+        const resolvedArweaveAddr = await ownerToAddress(public_key);
+        const isVerifiable = await verifyBetaExotic({
+          network_key: address.network,
+          arweave_address: resolvedArweaveAddr,
+          signature: address.verification_req,
+          exotic_address: address.address,
         });
 
         await writeEvaluation(
