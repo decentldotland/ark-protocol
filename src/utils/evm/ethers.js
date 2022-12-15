@@ -140,7 +140,11 @@ export async function resolveNetworkKey(network_key) {
       };
     case "NEAR-MAINNET":
       return {
-        EXM_KEY: "EXOTIC",
+        EXM_KEY: "EXOTIC-NEAR",
+      };
+    case "SOLANA-MAINNET":
+      return {
+        EXM_KEY: "EXOTIC-SOLANA",
       };
     default:
       return {
