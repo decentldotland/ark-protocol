@@ -16,7 +16,7 @@
     "ARBITRUM-MAINNET",
     "POLYGON-MAINNET"
   ],
-  "exotic_networks": ["NEAR-MAINNET"],
+  "exotic_networks": ["NEAR-MAINNET", "SOLANA-MAINNET", "TRON-MAINNET"],
   "user_sig_messages": ["my pubkey for DL ARK is: "],
   "admin_sig_messages": ["DL ARK Admin pubkey of: "],
   "identities": [],
