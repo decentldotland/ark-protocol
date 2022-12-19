@@ -293,6 +293,7 @@ export async function getEvmosNfts(evm_address) {
       for (const key of Object.keys(nft)) {
         !keepKeys.includes(key) ? delete nft[key] : void 0;
       }
+      nft.ark_network = "evmos";
       nft.token_id = nft?.nft_data?.[0]?.token_id;
       nft.balance = nft?.nft_data?.[0]?.token_balance;
       nft.name = nft?.nft_data?.[0]?.external_data?.name;
