@@ -49,7 +49,7 @@ export async function getNftsOf(network, address) {
 
     for (const linkage of verifiedEvmAddresses) {
       const address = await getAddrCheckSum(linkage.address);
-      const nftsErc = await getMoralisNfts(address);
+      const nftsErc = await getMoralisHybrid(address, "eth");
       const nftsEvmos = await getEvmosNfts(address);
       const nftsFantom = await getMoralisHybrid(address, "fantom");
       const nftsBsc = await getMoralisHybrid(address, "bsc");
