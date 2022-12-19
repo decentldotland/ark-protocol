@@ -146,6 +146,10 @@ export async function resolveNetworkKey(network_key) {
       return {
         EXM_KEY: "EXOTIC-SOLANA",
       };
+    case "TRON-MAINNET":
+      return {
+        EXM_KEY: "EXOTIC-TRON",
+      };
     default:
       return {
         RPC_URL: GOERLI_ETH_RPC,
