@@ -15,6 +15,7 @@ import {
   EVMOS_MAINNET_ADDRESS,
   NEAR_TESTNET_ARK_ORACLE,
   SOLANA_BETA_REGISTRY,
+  TRON_BETA_REGISTRY,
 } from "./constants.js";
 import { evaluateOracleState } from "./arweave/exm-rwx.js";
 import base64url from "base64url";
@@ -106,6 +107,10 @@ export async function getNetworkAddresses() {
       },
       solana_oracle_address: {
         addr: SOLANA_BETA_REGISTRY,
+        network: "exm-mainnet",
+      },
+      tron_oracle_address: {
+        addr: TRON_BETA_REGISTRY,
         network: "exm-mainnet",
       },
       neon_devnet_oracle_addr: {
