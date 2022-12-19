@@ -7,6 +7,7 @@ import {
   URBIT_ID_CONTRACT,
   LENS_LPP_CONTRACT,
   BYZANTION_QUERY,
+  MORALIS_NETWORKS,
 } from "./constants.js";
 import { getUserRegistrationTimestamp } from "./arweave/graphql.js";
 import { getAddrCheckSum } from "./evm/web3.js";
@@ -19,6 +20,7 @@ import ENS from "@evmosdomains/sdk";
 import getName from "@evmosdomains/sdk";
 import axios from "axios";
 import base64url from "base64url";
+import assert from "node:assert";
 import "./setEnv.js";
 
 export async function getArkProfile(network, address) {
@@ -566,4 +568,25 @@ export async function getNearNfts(address) {
   }
 
   return data?.nft_meta;
+}
+
+export async function getMoralisHybrid(evm_address, network) {
+  try {
+    assert.equal(MORALIS_NETWORKS.includes(network), true);
+    const res = (
+      await axios.get(
+        `https://deep-index.moralis.io/api/v2/${evm_address}/nft?chain=${network}&format=decimal`,
+        {
+          headers: {
+            Accept: "application/json",
+            "X-API-Key": process.env.MORALIS_API_KEY,
+          },
+        }
+      )
+    )?.data;
+    return res?.result;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }
