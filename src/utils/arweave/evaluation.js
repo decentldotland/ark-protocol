@@ -125,6 +125,28 @@ export async function checkAndVerifyUser(userObject) {
         const lastUpdatedObject = await getUserObject(resolvedArweaveAddr);
         await mirrorStateToNear(lastUpdatedObject);
       }
+      
+      if (exmNetKey === "EXOTIC-TRON") {
+        const resolvedArweaveAddr = await ownerToAddress(public_key);
+        const isVerifiable = await verifyBetaExotic({
+          network_key: address.network,
+          arweave_address: resolvedArweaveAddr,
+          signature: address.verification_req,
+          exotic_address: address.address,
+        });
+
+        await writeEvaluation(
+          public_key,
+          arweave_address,
+          address.address,
+          isVerifiable,
+          address.network
+        );
+
+        await sleep(5);
+        const lastUpdatedObject = await getUserObject(resolvedArweaveAddr);
+        await mirrorStateToNear(lastUpdatedObject);
+      }
     }
   } catch (error) {
     console.log(error);
