@@ -584,6 +584,12 @@ export async function getMoralisHybrid(evm_address, network) {
         }
       )
     )?.data;
+
+    for (const nft of res?.result) {
+      nft.ark_network = network;
+      nft.image = (JSON.parse(nft?.metadata))?.image;
+      nft.description = (JSON.parse(nft?.metadata))?.description;
+    }
     return res?.result;
   } catch (error) {
     console.log(error);
