@@ -76,7 +76,8 @@ Check these [docs](./ark-contracts/docs/exm-ark-guide.md) to learn how to interg
 | Polygon Registry SC      | [ark-contracts/EVM](./ark-contracts/EVM/identity.vy)     |  [0xdE44d3fB118E0f007f2C0D8fFFE98b994383949A](https://polygonscan.com/address/0xde44d3fb118e0f007f2c0d8fffe98b994383949a)          |  Mainnet |
 | Near Registry SC      | [ark-contracts/near](./ark-contracts/near)     |  [ark_station_1.near](https://explorer.near.org/accounts/ark_station_1.near) |  Mainnet |
 | Evmos Registry SC      | [ark-contracts/EVM](./ark-contracts/EVM/identity.vy)     |  [0xdE44d3fB118E0f007f2C0D8fFFE98b994383949A](https://evm.evmos.org/address/0xdE44d3fB118E0f007f2C0D8fFFE98b994383949A) |  Mainnet |
-| Solana Registry SC      | [ark-contracts/EXM](./ark-contracts/EXM/sol-registry.js)     |  [Wg_78ViU6IkxpKnAJGMpGlXd7u_QmCsHIo3kFGKek8M](https://api.exm.dev/read/Wg_78ViU6IkxpKnAJGMpGlXd7u_QmCsHIo3kFGKek8M) |  EXM |
+| Solana Registry SC      | [ark-contracts/EXM](./ark-contracts/EXM/solana/sol-registry.js)     |  [Wg_78ViU6IkxpKnAJGMpGlXd7u_QmCsHIo3kFGKek8M](https://api.exm.dev/read/Wg_78ViU6IkxpKnAJGMpGlXd7u_QmCsHIo3kFGKek8M) |  EXM |
+| Tron Registry SC      | [ark-contracts/EXM](./ark-contracts/EXM/tron/trx-registry.js)     |  [AMCEh5wYyBfQ5Y_lxpOn6Fp_O4JqDVOPU_swvednJII](https://api.exm.dev/read/AMCEh5wYyBfQ5Y_lxpOn6Fp_O4JqDVOPU_swvednJII) |  EXM |
 
 
 
@@ -211,6 +212,10 @@ Reponse example: return the smart contracts addresses
   },
   "solana_oracle_address": {
     "addr": "Wg_78ViU6IkxpKnAJGMpGlXd7u_QmCsHIo3kFGKek8M",
+    "network": "exm-mainnet"
+  },
+  "tron_oracle_address": {
+    "addr": "AMCEh5wYyBfQ5Y_lxpOn6Fp_O4JqDVOPU_swvednJII",
     "network": "exm-mainnet"
   },
   "neon_devnet_oracle_addr": {
