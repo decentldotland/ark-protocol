@@ -20,6 +20,7 @@ export const EVMOS_MAINNET_ADDRESS = `0xdE44d3fB118E0f007f2C0D8fFFE98b994383949A
 export const NEAR_MAINNET_ADDRESS = `ark_station_1.near`;
 export const NEAR_TESTNET_ARK_ORACLE = `dev-1660516310576-97373428914255`;
 export const SOLANA_BETA_REGISTRY = `Wg_78ViU6IkxpKnAJGMpGlXd7u_QmCsHIo3kFGKek8M`;
+export const TRON_BETA_REGISTRY = `AMCEh5wYyBfQ5Y_lxpOn6Fp_O4JqDVOPU_swvednJII`;
 
 export const EVM_ORACLES_CONTRACTS = [
   ETH_ORACLE_ADDRESS,
@@ -59,6 +60,13 @@ export const SERVER_ETH_RPC = `https://cloudflare-eth.com`;
 // UTILS
 export const URBIT_ID_CONTRACT = `0x33eecbf908478c10614626a9d304bfe18b78dd73`;
 export const LENS_LPP_CONTRACT = `0xdb46d1dc155634fbc732f92e853b10b288ad5a1d`;
+export const MORALIS_NETWORKS = [
+  "eth",
+  "fantom",
+  "polygon",
+  "avalanche",
+  "bsc",
+];
 
 // GraphQL
 export const BYZANTION_QUERY = `

@@ -1,6 +1,6 @@
 {
   "name": "ark-protocol",
-  "version": "0.6.9",
+  "version": "0.7.0",
   "type": "module",
   "description": "Verifiable multichain identities",
   "main": "./src/app.js",
@@ -28,6 +28,7 @@
     "@evmosdomains/sdk": "^1.1.0",
     "@execution-machine/sdk": "^0.1.41",
     "arweave": "^1.11.4",
+    "assert": "^2.0.0",
     "axios": "^0.27.2",
     "base64url": "^3.0.1",
     "chalk": "^5.0.1",

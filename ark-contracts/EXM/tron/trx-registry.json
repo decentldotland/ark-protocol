@@ -1,0 +1,9 @@
+{
+  "identities": [],
+  "message": "ark linking req trx",
+  "message_counter": 0,
+  "trx_molecule_endpoint": "http://trx.molecule.sh",
+  "signatures": []
+}
+
+ 

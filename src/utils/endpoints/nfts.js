@@ -1,5 +1,10 @@
 import { evaluateOracleState } from "../arweave/exm-rwx.js";
-import { getNearNfts, getMoralisNfts, getEvmosNfts } from "../server-utils.js";
+import {
+  getNearNfts,
+  getMoralisNfts,
+  getEvmosNfts,
+  getMoralisHybrid,
+} from "../server-utils.js";
 import { getAddrCheckSum } from "../evm/web3.js";
 import base64url from "base64url";
 
@@ -46,8 +51,16 @@ export async function getNftsOf(network, address) {
       const address = await getAddrCheckSum(linkage.address);
       const nftsErc = await getMoralisNfts(address);
       const nftsEvmos = await getEvmosNfts(address);
-      responseProfile.EVM =
-        responseProfile.EVM.concat(nftsErc).concat(nftsEvmos);
+      const nftsFantom = await getMoralisHybrid(address, "fantom");
+      const nftsBsc = await getMoralisHybrid(address, "bsc");
+      const nftsAvax = await getMoralisHybrid(address, "avalanche");
+      const nftsPolygon = await getMoralisHybrid(address, "polygon");
+      responseProfile.EVM = responseProfile.EVM.concat(nftsErc)
+        .concat(nftsEvmos)
+        .concat(nftsFantom)
+        .concat(nftsBsc)
+        .concat(nftsAvax)
+        .concat(nftsPolygon);
     }
 
     for (const linkage of verifiedNearAddresses) {
