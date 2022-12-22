@@ -4,6 +4,8 @@ import {
   getMoralisNfts,
   getEvmosNfts,
   getMoralisHybrid,
+  getKoiiNfts,
+  getPermaPagesNfts,
 } from "../server-utils.js";
 import { getAddrCheckSum } from "../evm/web3.js";
 import base64url from "base64url";
@@ -44,6 +46,11 @@ export async function getNftsOf(network, address) {
         addr.ark_key === "EXOTIC" &&
         addr.network === "NEAR-MAINNET"
     );
+
+    const koiiNfts = await getKoiiNfts(userProfile.arweave_address);
+    const permapagesNfts = await getPermaPagesNfts(userProfile.arweave_address);
+
+    responseProfile.ARWEAVE = [].concat(koiiNfts).concat(permapagesNfts);
     responseProfile.EVM = [];
     responseProfile.NEAR = [];
 
