@@ -264,7 +264,7 @@ async function getArns(arweave_address) {
   }
 }
 
-async function getKoiiNfts(arweave_address) {
+export async function getKoiiNfts(arweave_address) {
   try {
     const nfts = await getWeaveAggregator("koii", arweave_address);
     return nfts;
@@ -308,7 +308,7 @@ export async function getEvmosNfts(evm_address) {
   }
 }
 
-async function getPermaPagesNfts(arweave_address) {
+export async function getPermaPagesNfts(arweave_address) {
   try {
     const nfts = await getWeaveAggregator("permapages-img", arweave_address);
     return nfts;
