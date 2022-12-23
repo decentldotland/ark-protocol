@@ -30,6 +30,12 @@ app.use(
 
 app.set("view engine", "ejs");
 
+app.use((err, res, req, next) => {
+  res.setHeader("Content-Type", "application/json");
+  res.status(500).send('{"error": "timeout"}');
+  return;
+});
+
 app.get("/v2/oracle/state", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
   const encodedState = (await getOracleState())
