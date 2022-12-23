@@ -47,10 +47,10 @@ export async function getNftsOf(network, address) {
         addr.network === "NEAR-MAINNET"
     );
 
-    const koiiNfts = await getKoiiNfts(userProfile.arweave_address);
-    const permapagesNfts = await getPermaPagesNfts(userProfile.arweave_address);
+//     const koiiNfts = await getKoiiNfts(userProfile.arweave_address);
+//     const permapagesNfts = await getPermaPagesNfts(userProfile.arweave_address);
 
-    responseProfile.ARWEAVE = [].concat(koiiNfts).concat(permapagesNfts);
+//     responseProfile.ARWEAVE = [].concat(koiiNfts).concat(permapagesNfts);
     responseProfile.EVM = [];
     responseProfile.NEAR = [];
 
