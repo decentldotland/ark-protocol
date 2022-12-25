@@ -12,6 +12,7 @@ import { getSoArkData } from "./utils/endpoints/soArk.js";
 import { getNearNfts } from "./utils/server-utils.js";
 import { getDomainsOf } from "./utils/endpoints/domains.js";
 import { getNftsOf } from "./utils/endpoints/nfts.js";
+import { evmHybridNfts } from "./utils/endpoints/evm-nfts.js";
 import express from "express";
 import base64url from "base64url";
 import cors from "cors";
@@ -93,6 +94,19 @@ app.get("/v2/allnft/:network/:address", async (req, res) => {
   const jsonRes = JSON.parse(base64url.decode(response));
   res.send(jsonRes);
   return;
+});
+
+app.get("/v2/evm-nft/:network/:evm_network/:address", async (req, res) => {
+  try {
+      res.setHeader("Content-Type", "application/json");
+  const { network, address, evm_network } = req.params;
+  const response = await evmHybridNfts(network, evm_network, address);
+  const jsonRes = JSON.parse(base64url.decode(response));
+  res.send(jsonRes);
+  return;
+} catch(error) {
+  console.log(error)
+}
 });
 
 app.get("/v2/nep/:address", async (req, res) => {
