@@ -264,7 +264,7 @@ async function getArns(arweave_address) {
   }
 }
 
-async function getKoiiNfts(arweave_address) {
+export async function getKoiiNfts(arweave_address) {
   try {
     const nfts = await getWeaveAggregator("koii", arweave_address);
     return nfts;
@@ -293,6 +293,7 @@ export async function getEvmosNfts(evm_address) {
       for (const key of Object.keys(nft)) {
         !keepKeys.includes(key) ? delete nft[key] : void 0;
       }
+      nft.ark_network = "evmos";
       nft.token_id = nft?.nft_data?.[0]?.token_id;
       nft.balance = nft?.nft_data?.[0]?.token_balance;
       nft.name = nft?.nft_data?.[0]?.external_data?.name;
@@ -307,7 +308,7 @@ export async function getEvmosNfts(evm_address) {
   }
 }
 
-async function getPermaPagesNfts(arweave_address) {
+export async function getPermaPagesNfts(arweave_address) {
   try {
     const nfts = await getWeaveAggregator("permapages-img", arweave_address);
     return nfts;
@@ -584,6 +585,12 @@ export async function getMoralisHybrid(evm_address, network) {
         }
       )
     )?.data;
+
+    for (const nft of res?.result) {
+      nft.ark_network = network;
+      nft.image = (JSON.parse(nft?.metadata))?.image;
+      nft.description = (JSON.parse(nft?.metadata))?.description;
+    }
     return res?.result;
   } catch (error) {
     console.log(error);
