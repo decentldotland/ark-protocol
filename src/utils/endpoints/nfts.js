@@ -1,9 +1,6 @@
 import { evaluateOracleState } from "../arweave/exm-rwx.js";
 import {
   getNearNfts,
-  getMoralisNfts,
-  getEvmosNfts,
-  getMoralisHybrid,
   getKoiiNfts,
   getPermaPagesNfts,
 } from "../server-utils.js";
@@ -37,9 +34,6 @@ export async function getNftsOf(network, address) {
       return "e30";
     }
 
-    const verifiedEvmAddresses = userProfile.addresses.filter(
-      (addr) => !!addr.is_verified && addr.ark_key === "EVM"
-    );
     const verifiedNearAddresses = userProfile.addresses.filter(
       (addr) =>
         !!addr.is_verified &&
@@ -51,31 +45,13 @@ export async function getNftsOf(network, address) {
     const permapagesNfts = await getPermaPagesNfts(userProfile.arweave_address);
 
     responseProfile.ARWEAVE = [].concat(koiiNfts).concat(permapagesNfts);
-    responseProfile.EVM = [];
     responseProfile.NEAR = [];
-
-    for (const linkage of verifiedEvmAddresses) {
-      const address = await getAddrCheckSum(linkage.address);
-      const nftsErc = await getMoralisHybrid(address, "eth");
-      const nftsEvmos = await getEvmosNfts(address);
-      const nftsFantom = await getMoralisHybrid(address, "fantom");
-      const nftsBsc = await getMoralisHybrid(address, "bsc");
-      const nftsAvax = await getMoralisHybrid(address, "avalanche");
-      const nftsPolygon = await getMoralisHybrid(address, "polygon");
-      responseProfile.EVM = responseProfile.EVM.concat(nftsErc)
-        .concat(nftsEvmos)
-        .concat(nftsFantom)
-        .concat(nftsBsc)
-        .concat(nftsAvax)
-        .concat(nftsPolygon);
-    }
 
     for (const linkage of verifiedNearAddresses) {
       const nfts = await getNearNfts(linkage.address);
       responseProfile.NEAR = responseProfile.NEAR.concat(nfts);
     }
 
-    responseProfile.EVM.flat();
     responseProfile.NEAR.flat();
 
     return base64url(JSON.stringify(responseProfile));
