@@ -13,6 +13,7 @@ import { getNearNfts } from "./utils/server-utils.js";
 import { getDomainsOf } from "./utils/endpoints/domains.js";
 import { getNftsOf } from "./utils/endpoints/nfts.js";
 import { evmHybridNfts } from "./utils/endpoints/evm-nfts.js";
+import { getProfileMetadata } from "./utils/endpoints/metadata.js";
 import express from "express";
 import base64url from "base64url";
 import cors from "cors";
@@ -96,18 +97,29 @@ app.get("/v2/allnft/:network/:address", async (req, res) => {
   return;
 });
 
-app.get("/v2/evm-nft/:network/:evm_network/:address", async (req, res) => {
-  try {
-      res.setHeader("Content-Type", "application/json");
-  const { network, address, evm_network } = req.params;
-  const response = await evmHybridNfts(network, evm_network, address);
+app.get("/v2/profile-metadata/:network/:address", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  const { network, address } = req.params;
+  const response = await getProfileMetadata(network, address);
   const jsonRes = JSON.parse(base64url.decode(response));
   res.send(jsonRes);
   return;
-} catch(error) {
-  console.log(error)
-}
 });
+
+app.get("/v2/evm-nft/:network/:evm_network/:address", async (req, res) => {
+  try {
+    res.setHeader("Content-Type", "application/json");
+    const { network, address, evm_network } = req.params;
+    const response = await evmHybridNfts(network, evm_network, address);
+    const jsonRes = JSON.parse(base64url.decode(response));
+    res.send(jsonRes);
+    return;
+  } catch (error) {
+    res.send({});
+    return;
+  }
+});
+
 
 app.get("/v2/nep/:address", async (req, res) => {
   try {
