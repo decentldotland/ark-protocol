@@ -145,7 +145,7 @@ export async function getEnsProfile(eth_address) {
   }
 }
 
-async function getRss3Profile(eth_address) {
+export async function getRss3Profile(eth_address) {
   try {
     const profileConfig = {
       method: "get",
@@ -202,7 +202,7 @@ export async function getCrossbellsOf(evm_address) {
   }
 }
 
-async function getLensProtocolsActv(eth_address) {
+export async function getLensProtocolsActv(eth_address) {
   try {
     const activities = {
       method: "get",
@@ -255,7 +255,7 @@ export async function getEvmosProfile(evm_address) {
   }
 }
 
-async function getArns(arweave_address) {
+export async function getArns(arweave_address) {
   try {
     const domain = await getWeaveAggregator("arns", arweave_address);
     return domain;
@@ -317,7 +317,7 @@ export async function getPermaPagesNfts(arweave_address) {
   }
 }
 
-async function getPermaPagesStamps(arweave_address) {
+export async function getPermaPagesStamps(arweave_address) {
   try {
     const nfts = await getWeaveAggregator("permapages-stamps", arweave_address);
     return nfts;
@@ -341,7 +341,7 @@ export async function getAllPoaps(evm_address) {
   }
 }
 
-async function getGitPoaps(evm_address) {
+export async function getGitPoaps(evm_address) {
   try {
     const ownedGitpoaps = (
       await axios.get(
@@ -355,7 +355,7 @@ async function getGitPoaps(evm_address) {
   }
 }
 
-async function retrieveArtransactions(arweave_address) {
+export async function retrieveArtransactions(arweave_address) {
   try {
     const q = {
       query: `query {
@@ -399,7 +399,7 @@ async function retrieveArtransactions(arweave_address) {
 }
 
 
-async function retrievNearTransaction(userProfile) {
+export async function retrievNearTransaction(userProfile) {
   try {
     for (const identity of userProfile.exotic_addresses) {
       if (identity.ver_req_network === "NEAR-MAINNET" && identity.is_verified) {
