@@ -150,6 +150,10 @@ export async function resolveNetworkKey(network_key) {
       return {
         EXM_KEY: "EXOTIC-TRON",
       };
+    case "DESO-MAINNET":
+      return {
+        EXM_KEY: "EXOTIC-DESO",
+      };
     default:
       return {
         RPC_URL: GOERLI_ETH_RPC,
