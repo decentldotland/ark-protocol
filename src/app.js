@@ -106,11 +106,12 @@ app.get("/v2/profile-metadata/:network/:address", async (req, res) => {
   return;
 });
 
-app.get("/v2/evm-nft/:network/:evm_network/:address", async (req, res) => {
+app.get("/v2/evm-nft/:network/:evm_network/:address/:ignorePaywalls?", async (req, res) => {
   try {
     res.setHeader("Content-Type", "application/json");
-    const { network, address, evm_network } = req.params;
-    const response = await evmHybridNfts(network, evm_network, address);
+    const { network, address, evm_network, ignorePaywalls } = req.params;
+    console.log(network, address, evm_network, ignorePaywalls)
+    const response = await evmHybridNfts(network, evm_network, address, ignorePaywalls);
     const jsonRes = JSON.parse(base64url.decode(response));
     res.send(jsonRes);
     return;
