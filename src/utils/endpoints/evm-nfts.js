@@ -3,7 +3,7 @@ import { getEvmosNfts, getMoralisHybrid } from "../server-utils.js";
 import { getAddrCheckSum } from "../evm/web3.js";
 import base64url from "base64url";
 
-export async function evmHybridNfts(network, evm_network, address) {
+export async function evmHybridNfts(network, evm_network, address, ignorePaywalls) {
   try {
     let userProfile;
     let responseProfile = [];
@@ -40,7 +40,7 @@ export async function evmHybridNfts(network, evm_network, address) {
       {
         const address = await getAddrCheckSum(linkage.address);
         if (evm_network.toLowerCase() !== "evmos") {
-          const nftsErc = await getMoralisHybrid(address, evm_network);
+          const nftsErc = await getMoralisHybrid(address, evm_network, ignorePaywalls);
           responseProfile = responseProfile.concat(nftsErc);
         } else {
           const evmosNfts = await getEvmosNfts(address);
