@@ -41,7 +41,7 @@ export async function handle(state, action) {
     try {
       ContractAssert(!signatures.includes(signature));
       const isValid = await EXM.deterministicFetch(
-        `${deso_molecule_endpoint}/deso-auth/${caller}/${btoa(message + message_counter)}/${signature}`
+        `${deso_molecule_endpoint}/deso/${caller}/${btoa(message + message_counter)}/${signature}`
       );
       ContractAssert(isValid.asJSON()?.result, ERROR_INVALID_CALLER);
       signatures.push(signature);
