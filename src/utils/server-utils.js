@@ -8,6 +8,7 @@ import {
   LENS_LPP_CONTRACT,
   BYZANTION_QUERY,
   MORALIS_NETWORKS,
+  MORALIS_BLACKLISTED_DOMAINS,
 } from "./constants.js";
 import { getUserRegistrationTimestamp } from "./arweave/graphql.js";
 import { getAddrCheckSum } from "./evm/web3.js";
@@ -53,16 +54,25 @@ export async function getArkProfile(network, address) {
     userProfile.EVM = {};
     userProfile.EXOTIC = {};
 
-    const verifiedEvmAddresses = userProfile.addresses.filter((addr) => !!addr.is_verified && addr.ark_key === "EVM");
-    const verifiedExoticAddresses = userProfile.addresses.filter((addr) => !!addr.is_verified && addr.ark_key === "EXOTIC" && addr.network === "NEAR-MAINNET");
+    const verifiedEvmAddresses = userProfile.addresses.filter(
+      (addr) => !!addr.is_verified && addr.ark_key === "EVM"
+    );
+    const verifiedExoticAddresses = userProfile.addresses.filter(
+      (addr) =>
+        !!addr.is_verified &&
+        addr.ark_key === "EXOTIC" &&
+        addr.network === "NEAR-MAINNET"
+    );
 
     const koiiNfts = await getKoiiNfts(userProfile.arweave_address);
     const permapagesNfts = await getPermaPagesNfts(userProfile.arweave_address);
     const arnsDomain = await getArns(userProfile.arweave_address);
-    
+
     // ARWEAVE METADATA
     userProfile.ARWEAVE.ANS = await getAnsProfile(userProfile.arweave_address);
-    userProfile.ARWEAVE.IS_VOUCHED = await isVouched(userProfile.arweave_address);
+    userProfile.ARWEAVE.IS_VOUCHED = await isVouched(
+      userProfile.arweave_address
+    );
     userProfile.ARWEAVE.ARNS = arnsDomain ? `${arnsDomain}.arweave.dev` : false;
     userProfile.ARWEAVE.ANFTS =
       koiiNfts.length > 0 || permapagesNfts.length > 0
@@ -71,11 +81,13 @@ export async function getArkProfile(network, address) {
     userProfile.ARWEAVE.ARWEAVE_TRANSACTIONS = await retrieveArtransactions(
       userProfile.arweave_address
     );
-    userProfile.ARWEAVE.STAMPS = await getPermaPagesStamps(userProfile.arweave_address);
+    userProfile.ARWEAVE.STAMPS = await getPermaPagesStamps(
+      userProfile.arweave_address
+    );
 
     for (const address of verifiedEvmAddresses) {
       const addr = await getAddrCheckSum(address.address);
-      userProfile.EVM[addr] = {}
+      userProfile.EVM[addr] = {};
       const addressMetadata = userProfile.EVM[addr];
 
       const ercNfts = await getMoralisNfts(addr);
@@ -85,15 +97,15 @@ export async function getArkProfile(network, address) {
       addressMetadata.AVVY = await getAvvyProfile(addr);
       addressMetadata.LINAGEE = await getLinageeDomains(addr);
       addressMetadata.EVMOS = await getEvmosProfile(addr);
-        
+
       addressMetadata.LENS_HANDLES = await getLensHandles(addr);
       addressMetadata.GITPOAPS = await getGitPoaps(addr);
       addressMetadata.POAPS = await getAllPoaps(addr);
       addressMetadata.ERC_NFTS = ercNfts;
       addressMetadata.EVMOS_NFTS = evmosNfts;
       addressMetadata.URBIT_IDS = ercNfts.filter(
-          (nft) => nft.token_address == URBIT_ID_CONTRACT
-        );
+        (nft) => nft.token_address == URBIT_ID_CONTRACT
+      );
       addressMetadata.LENS_PROTOCOLS_ACTV = await getLensProtocolsActv(addr);
       addressMetadata.RSS3 = await getRss3Profile(addr);
       addressMetadata.GALAXY_CREDS = await getGalaxyCreds(addr);
@@ -101,7 +113,7 @@ export async function getArkProfile(network, address) {
     }
 
     for (const address of verifiedExoticAddresses) {
-      const addr = address.address
+      const addr = address.address;
       userProfile.EXOTIC[addr] = {};
       const addressMetadata = userProfile.EXOTIC[addr];
 
@@ -221,7 +233,6 @@ export async function getLensProtocolsActv(eth_address) {
   }
 }
 
-
 export async function getAvvyProfile(evm_address) {
   try {
     const provider = new ethers.providers.JsonRpcProvider(
@@ -239,9 +250,7 @@ export async function getAvvyProfile(evm_address) {
 
 export async function getEvmosProfile(evm_address) {
   try {
-    const provider = new ethers.providers.JsonRpcProvider(
-      EVMOS_MAINNET_RPC
-    );
+    const provider = new ethers.providers.JsonRpcProvider(EVMOS_MAINNET_RPC);
     const evmos = new ENS.default({
       provider,
       ensAddress: ENS.getEnsAddress("9001"),
@@ -398,7 +407,6 @@ export async function retrieveArtransactions(arweave_address) {
   }
 }
 
-
 export async function retrievNearTransaction(userProfile) {
   try {
     for (const identity of userProfile.exotic_addresses) {
@@ -474,7 +482,10 @@ async function getLinageeDomains(address) {
         format: "decimal",
         token_addresses: "0x2cc8342d7c8bff5a213eb2cde39de9a59b3461a7",
       },
-      headers: { accept: "application/json", "X-API-Key": process.env.MORALIS_API_KEY },
+      headers: {
+        accept: "application/json",
+        "X-API-Key": process.env.MORALIS_API_KEY,
+      },
     };
 
     const res = await axios.request(options);
@@ -493,7 +504,6 @@ async function getLinageeDomains(address) {
     return [];
   }
 }
-
 
 export async function getGalaxyCreds(address) {
   try {
@@ -571,9 +581,10 @@ export async function getNearNfts(address) {
   return data?.nft_meta;
 }
 
-export async function getMoralisHybrid(evm_address, network) {
+export async function getMoralisHybrid(evm_address, network, ignorePaywalls) {
   try {
     assert.equal(MORALIS_NETWORKS.includes(network), true);
+    const ignoredNftsIndex = [];
     const res = (
       await axios.get(
         `https://deep-index.moralis.io/api/v2/${evm_address}/nft?chain=${network}&format=decimal`,
@@ -588,10 +599,22 @@ export async function getMoralisHybrid(evm_address, network) {
 
     for (const nft of res?.result) {
       nft.ark_network = network;
-      nft.image = (JSON.parse(nft?.metadata))?.image;
-      nft.description = (JSON.parse(nft?.metadata))?.description;
+      nft.image = JSON.parse(nft?.metadata)?.image;
+      nft.description = JSON.parse(nft?.metadata)?.description;
+      if (ignorePaywalls) {
+        for (const domain of MORALIS_BLACKLISTED_DOMAINS) {
+          if (nft.image?.includes(domain)) {
+            const nftIndex = res?.result?.findIndex(
+              (e) => e.token_uri === nft.token_uri
+            );
+            ignoredNftsIndex.push(nftIndex);
+          }
+        }
+      }
     }
-    return res?.result;
+    return res?.result.filter(
+      (nft, index) => !ignoredNftsIndex.includes(index)
+    );
   } catch (error) {
     console.log(error);
     return false;

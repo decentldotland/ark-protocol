@@ -68,6 +68,8 @@ export const MORALIS_NETWORKS = [
   "bsc",
 ];
 
+export const MORALIS_BLACKLISTED_DOMAINS = ["winterwitches.com"];
+
 // GraphQL
 export const BYZANTION_QUERY = `
   query GET_OWNED_NFTS($where: nft_meta_bool_exp!, $limit: Int!, $offset: Int!, $order_by: [nft_meta_order_by!]) {
