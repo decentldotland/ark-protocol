@@ -14,6 +14,7 @@ import { getDomainsOf } from "./utils/endpoints/domains.js";
 import { getNftsOf } from "./utils/endpoints/nfts.js";
 import { evmHybridNfts } from "./utils/endpoints/evm-nfts.js";
 import { getProfileMetadata } from "./utils/endpoints/metadata.js";
+import { getOatsOf } from "./utils/endpoints/oat.js";
 import express from "express";
 import base64url from "base64url";
 import cors from "cors";
@@ -92,6 +93,15 @@ app.get("/v2/allnft/:network/:address", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
   const { network, address } = req.params;
   const response = await getNftsOf(network, address);
+  const jsonRes = JSON.parse(base64url.decode(response));
+  res.send(jsonRes);
+  return;
+});
+
+app.get("/v2/oat/:network/:address", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  const { network, address } = req.params;
+  const response = await getOatsOf(network, address);
   const jsonRes = JSON.parse(base64url.decode(response));
   res.send(jsonRes);
   return;
