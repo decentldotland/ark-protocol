@@ -6,6 +6,7 @@ import {
   getLensHandles,
   getEvmosProfile,
   getMoralisNfts,
+  getArns,
 } from "../server-utils.js";
 import { URBIT_ID_CONTRACT } from "../constants.js";
 import { getAddrCheckSum } from "../evm/web3.js";
@@ -49,7 +50,9 @@ export async function getDomainsOf(network, address) {
     );
     const primaryAns = (await getAnsProfile(userProfile.arweave_address))
       ?.currentLabel;
+    const anrsRecord = await getArns(userProfile.arweave_address);
     responseProfile.ANS = [primaryAns ? `${primaryAns}.ar` : null];
+    responseProfile.ARNS = anrsRecord ? `${anrsRecord}.arweave.dev` : null;
     responseProfile.NEAR = verifiedNearAddresses
       .filter((addr) => addr?.address?.endsWith(".near"))
       .map((addr) => addr.address);
